@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy — truDiligence</title>
+<meta name="description" content="What truDiligence collects, why, and where it's stored." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #122922;
+    --bg-deep: #0D1B16;
+    --border: #1E3A31;
+    --text: #EAF3EE;
+    --muted: #93A69C;
+    --muted-dim: #6F8579;
+    --accent: #39D98A;
+    --accent-soft: rgba(57, 217, 138, 0.12);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    background: var(--bg-deep);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .wordmark {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+  }
+  .wordmark .accent { color: var(--accent); }
+  .tagline {
+    font-size: 11px;
+    color: var(--muted-dim);
+    margin-top: 1px;
+  }
+
+  main.legal {
+    padding: 56px 0 64px;
+  }
+  main.legal h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    line-height: 1.2;
+    margin: 0 0 4px;
+  }
+  .updated {
+    color: var(--muted-dim);
+    font-size: 13px;
+    margin-bottom: 36px;
+  }
+  main.legal h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px;
+    margin: 36px 0 14px;
+  }
+  main.legal p, main.legal li {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  main.legal strong {
+    color: var(--text);
+  }
+  main.legal ul {
+    padding-left: 20px;
+  }
+  main.legal ul li {
+    margin-bottom: 8px;
+  }
+
+  footer {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--border);
+    color: var(--muted-dim);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap brand">
+    <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+      <div class="mark">td</div>
+      <div>
+        <div class="wordmark">tru<span class="accent">Diligence</span></div>
+        <div class="tagline">evidence you can inspect</div>
+      </div>
+    </a>
+  </div>
+</header>
+
+<main class="legal">
+  <div class="wrap">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: 2026-08-29</p>
+
+    <p>
+      truDiligence is a Chrome extension that fact-checks text you select
+      on the web against real search results, weighted by a list of
+      domains you personally curate. This policy describes exactly what
+      data the extension and its backend collect, why, and where it's
+      stored — nothing more.
+    </p>
+
+    <h2>What we collect</h2>
+
+    <p><strong>Email address.</strong> Collected when you create an
+    account, via Supabase Auth. Used only for sign-in. An account is
+    required to use the extension at all, since every fact-check is
+    scored against your own trust list.</p>
+
+    <p><strong>Your trusted-domains list.</strong> Each domain you add on
+    the Sources tab, plus the trust score you assign it. You fully
+    control this list — add, edit, or remove entries at any time.</p>
+
+    <p><strong>Search history, including the sources behind each
+    verdict.</strong> Each time you fact-check a claim, we store the
+    claim text, the resulting verdict, the confidence score, and a
+    timestamp — plus, for every source used to reach that verdict, its
+    domain, your trust score for it, the LLM's supports / refutes /
+    unrelated judgment, the snippet text, and the source URL. This is
+    what powers the Searches tab, including its "see sources" evidence
+    view. We do not store the raw text you originally selected on the
+    page — only the claim(s) extracted from it (see "How your data is
+    processed" below).</p>
+
+    <p><strong>Billing and subscription state, if you subscribe.</strong>
+    Your Stripe customer ID, current plan, and subscription status. We
+    never see or store your card details — those go directly to
+    Stripe's own hosted checkout page.</p>
+
+    <p><strong>Your own Anthropic API key, only if you choose the "bring
+    your own key" (BYOK) plan.</strong> Stored encrypted at rest. Used to
+    make Anthropic API calls on your behalf so that usage bills to your
+    own Anthropic account instead of ours.</p>
+
+    <p><strong>On your device, via Chrome's <code>storage</code>
+    API.</strong> Your sign-in session (access and refresh tokens, plus
+    your user id/email), so you stay signed in between browser restarts;
+    two small display preferences (confidence-mode and trust-score
+    scale); and a short-lived cache of your most recent fact-check
+    result, so reopening the popup shows it instantly. None of this
+    leaves your device except your session token, which is sent to
+    authenticate your own calls to our backend.</p>
+
+    <h2>How your data is processed</h2>
+
+    <p>Fact-checking a claim involves a few third-party services along
+    the way:</p>
+
+    <ul>
+      <li><strong>Claim extraction.</strong> The raw text you selected is
+      sent to Anthropic's Claude API to narrow it down to up to 3
+      specific, checkable claims. This raw selection is not stored by
+      us — only the extracted claim(s) that result from it, once you
+      confirm and run a fact-check.</li>
+      <li><strong>Search.</strong> Finding sources for a claim means
+      sending the claim text as a search query to
+      <a href="https://serper.dev" target="_blank" rel="noopener">Serper.dev</a>,
+      plus your browser's country/language so results are geo-targeted to
+      you rather than to our server's location. If Serper is unavailable,
+      we fall back to
+      <a href="https://search.brave.com" target="_blank" rel="noopener">Brave Search</a>
+      with the same claim text and locale.</li>
+      <li><strong>Stance classification.</strong> The claim text and each
+      retrieved result snippet are sent to Anthropic's Claude API, which
+      judges whether the snippet supports, refutes, or is unrelated to
+      the claim.</li>
+      <li><strong>Billing.</strong> If you subscribe, checkout and
+      payment happen entirely on
+      <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>'s
+      own hosted pages. We only receive your Stripe customer ID and
+      subscription status back via Stripe's webhooks.</li>
+    </ul>
+
+    <p>If you're on the BYOK plan, claim extraction and stance
+    classification are billed to your own Anthropic account (using your
+    stored key) instead of ours; otherwise they run on our shared
+    Anthropic account. Anthropic's, Serper's, Brave's, and Stripe's
+    handling of the data sent to them is governed by their own
+    respective privacy policies, not this one.</p>
+
+    <h2>Where your data is stored</h2>
+
+    <p>Your email, trusted-domains list, search history (including
+    per-source snippets and links), subscription/billing state, and — if
+    you're on the BYOK plan — your encrypted Anthropic API key are stored
+    in <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>,
+    a third-party backend-as-a-service provider we use for our database
+    and authentication. Row Level Security scopes every row to your own
+    account, so only you (and, operationally, us as the service
+    operator) can access your data — never other users.</p>
+
+    <p>Supabase, Anthropic, Serper, Brave, and Stripe all operate
+    infrastructure in the United States. Using truDiligence means your
+    data may be processed and stored outside your own country, including
+    the US, regardless of where you are.</p>
+
+    <h2>How we secure your data</h2>
+
+    <ul>
+      <li>All traffic between the extension, our backend, and every
+      third-party service above travels over HTTPS.</li>
+      <li>Your BYOK Anthropic API key, if you provide one, is encrypted
+      at rest (Fernet/AES) before it's stored, and only decrypted in
+      memory at the moment it's used to make an API call on your
+      behalf.</li>
+      <li>We never see or store your card details — Stripe's own hosted
+      checkout handles those directly.</li>
+      <li>Supabase Row Level Security enforces account-scoping at the
+      database level, not just in application code.</li>
+    </ul>
+
+    <h2>How long we keep your data, and how to delete it</h2>
+
+    <p>We keep your account data — email, trusted-domains list, search
+    history, and billing state — for as long as your account is active.
+    You can remove individual trusted-domain entries yourself at any
+    time from the Sources tab, and export your full search history at
+    any time from the Searches tab. To delete your account and all
+    associated data, email us at the address below; we don't yet have a
+    self-serve "delete my account" button, so this is handled manually
+    on request.</p>
+
+    <h2>Your rights</h2>
+
+    <p>Depending on where you live, you may have rights under laws like
+    the EU/UK GDPR or the California CCPA/CPRA to access, correct,
+    export, or delete your personal data, or to object to how it's
+    processed. You can already do most of this yourself in the extension
+    (see above); for anything else, email us at the address below and
+    we'll honor applicable requests.</p>
+
+    <h2>Children's privacy</h2>
+
+    <p>truDiligence is not directed to children under 13, and we do not
+    knowingly collect data from them.</p>
+
+    <h2>Changes to this policy</h2>
+
+    <p>If we materially change what data we collect or how we use it,
+    we'll update this page and its "Last updated" date, and adjust the
+    extension's in-product disclosures to match. Continuing to use
+    truDiligence after a change means you accept the update.</p>
+
+    <h2>What we don't do</h2>
+
+    <p>We do not sell your data to third parties, and we do not use your
+    fact-check history, source data, or trusted-domains list for
+    advertising.</p>
+
+    <h2>Contact</h2>
+
+    <p>Questions about this policy:
+    <a href="mailto:jonathan.kammering@gmail.com">jonathan.kammering@gmail.com</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+    <span>© 2026 truDiligence</span>
+    <span>
+      <a href="index.html">Home</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:jonathan.kammering@gmail.com">jonathan.kammering@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
