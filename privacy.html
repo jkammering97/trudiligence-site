@@ -169,6 +169,13 @@
     page — only the claim(s) extracted from it (see "How your data is
     processed" below).</p>
 
+    <p><strong>Feedback you give on a result, if you give any.</strong>
+    A thumbs up/down on a result, and an optional short note if you choose
+    to add one. Tied to the specific search it's about and to your account,
+    so we can tell which results people found useful and, when you write
+    something, actually read it. Entirely optional — nothing is collected
+    here unless you tap a thumb.</p>
+
     <p><strong>Billing and subscription state, if you subscribe.</strong>
     Your Stripe customer ID, current plan, and subscription status. We
     never see or store your card details — those go directly to
@@ -232,7 +239,8 @@
     <h2>Where your data is stored</h2>
 
     <p>Your email, trusted-domains list, search history (including
-    per-source snippets and links), subscription/billing state, and — if
+    per-source snippets and links), any feedback you've given,
+    subscription/billing state, and — if
     you're on the BYOK plan — your encrypted Anthropic API key are stored
     in <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>,
     a third-party backend-as-a-service provider we use for our database
@@ -263,7 +271,10 @@
     <h2>How long we keep your data, and how to delete it</h2>
 
     <p>We keep your account data — email, trusted-domains list, search
-    history, and billing state — for as long as your account is active.
+    history, feedback, and billing state — for as long as your account is
+    active. Feedback is deleted automatically if the search it's attached
+    to is (there's no separate "delete this feedback" control, since
+    feedback without the search it's about wouldn't mean anything).
     You can remove individual trusted-domain entries yourself at any
     time from the Sources tab, and export your full search history at
     any time from the Searches tab. To delete your account and all
