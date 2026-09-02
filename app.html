@@ -751,6 +751,23 @@ function downloadRowsAsPdf(rows) {
     body: rows.map((r) => r.cells),
     styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
     headStyles: { fillColor: [22, 23, 27] },
+    margin: { left: 10, right: 10 },
+    // Fixed widths, not "auto": a single long unbroken string (a run-on claim or
+    // snippet with no spaces) makes autoTable's automatic sizing hand that column
+    // almost the whole table width and squeeze every other column to ~0, which
+    // wraps the entire table one character per line and blows the export up to
+    // hundreds of pages. Fixed widths cap the damage to just that one cell.
+    columnStyles: {
+      0: { cellWidth: 54 }, // Claim
+      1: { cellWidth: 15 }, // Verdict
+      2: { cellWidth: 14 }, // Confidence
+      3: { cellWidth: 26 }, // Checked At
+      4: { cellWidth: 18 }, // AI Model
+      5: { cellWidth: 32 }, // Source Domain
+      6: { cellWidth: 15 }, // Trust Level
+      7: { cellWidth: 15 }, // Stance
+      8: { cellWidth: 76 } // Snippet
+    },
     didParseCell: (data) => {
       const row = data.section === "body" ? rows[data.row.index] : null;
       if (row && data.column.index === EXPORT_SOURCE_DOMAIN_COL && row.url) {
