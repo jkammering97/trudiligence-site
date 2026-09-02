@@ -739,39 +739,83 @@ function downloadRowsAsCsv(rows) {
   downloadBlob(`${exportFilenameBase()}.csv`, csv, "text/csv;charset=utf-8;");
 }
 
+// Same badge colors as the app's own .badge-* classes (see :root above) --
+// keeps the PDF's verdict/trust/stance colors consistent with the web UI.
+const PDF_BADGE_COLORS = {
+  "badge-sourced": { bg: [233, 243, 236], text: [47, 107, 79] },
+  "badge-no-source": { bg: [251, 242, 225], text: [138, 99, 24] },
+  "badge-contradicted": { bg: [251, 234, 231], text: [163, 46, 34] },
+  "badge-not-assessable": { bg: [236, 234, 227], text: [138, 133, 120] }
+};
+const PDF_INK = [22, 23, 27];
+const PDF_BODY_TEXT = [87, 84, 76];
+const PDF_PAPER = [244, 241, 234];
+const PDF_LINK = [31, 63, 168];
+
+// Long domains (no spaces to wrap on) would otherwise force autoTable into
+// character-by-character wrapping -- truncate just for the PDF's display text.
+function pdfTruncate(text, max) {
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
 function downloadRowsAsPdf(rows) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: "landscape" });
-  doc.setFontSize(14);
   const rangeLabel = DOWNLOAD_RANGE_LABELS[document.getElementById("s-range").value] || "the selected range";
-  doc.text(`according to — Searches (${rangeLabel})`, 14, 15);
+  doc.setFont("times", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(...PDF_INK);
+  doc.text("according to", 14, 15);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...PDF_BODY_TEXT);
+  doc.text(`Searches — ${rangeLabel}`, 14, 21);
+
+  const body = rows.map((r) => r.cells.map((cell, i) => (i === EXPORT_SOURCE_DOMAIN_COL ? pdfTruncate(cell, 22) : cell)));
+
   doc.autoTable({
-    startY: 20,
+    startY: 27,
     head: [EXPORT_HEADERS],
-    body: rows.map((r) => r.cells),
-    styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
-    headStyles: { fillColor: [22, 23, 27] },
+    body,
+    styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak", textColor: PDF_BODY_TEXT, lineColor: [226, 221, 208] },
+    headStyles: { fillColor: PDF_INK, textColor: [255, 255, 255], fontSize: 7 },
+    alternateRowStyles: { fillColor: PDF_PAPER },
     margin: { left: 10, right: 10 },
     // Fixed widths, not "auto": a single long unbroken string (a run-on claim or
     // snippet with no spaces) makes autoTable's automatic sizing hand that column
     // almost the whole table width and squeeze every other column to ~0, which
     // wraps the entire table one character per line and blows the export up to
-    // hundreds of pages. Fixed widths cap the damage to just that one cell.
+    // hundreds of pages. Fixed widths cap the damage to just that one cell, and
+    // sizing each one to its widest realistic word (not just its header) keeps
+    // short values like "sourced" or "unrated" from being force-split mid-word.
     columnStyles: {
-      0: { cellWidth: 54 }, // Claim
-      1: { cellWidth: 15 }, // Verdict
-      2: { cellWidth: 14 }, // Confidence
+      0: { cellWidth: 53 }, // Claim
+      1: { cellWidth: 18, halign: "center" }, // Verdict
+      2: { cellWidth: 18, halign: "center" }, // Confidence
       3: { cellWidth: 26 }, // Checked At
-      4: { cellWidth: 18 }, // AI Model
-      5: { cellWidth: 32 }, // Source Domain
-      6: { cellWidth: 15 }, // Trust Level
-      7: { cellWidth: 15 }, // Stance
-      8: { cellWidth: 76 } // Snippet
+      4: { cellWidth: 19 }, // AI Model
+      5: { cellWidth: 34 }, // Source Domain
+      6: { cellWidth: 16, halign: "center" }, // Trust Level
+      7: { cellWidth: 17, halign: "center" }, // Stance
+      8: { cellWidth: 74 } // Snippet
     },
     didParseCell: (data) => {
-      const row = data.section === "body" ? rows[data.row.index] : null;
-      if (row && data.column.index === EXPORT_SOURCE_DOMAIN_COL && row.url) {
-        data.cell.styles.textColor = [31, 63, 168];
+      if (data.section !== "body") return;
+      const row = rows[data.row.index];
+      if (data.column.index === EXPORT_SOURCE_DOMAIN_COL && row && row.url) {
+        data.cell.styles.textColor = PDF_LINK;
+        return;
+      }
+      const badgeClass =
+        data.column.index === 1 ? VERDICT_BADGE[(data.cell.raw || "").toLowerCase()] || "badge-not-assessable" :
+        data.column.index === 6 ? TRUST_BUCKET_BADGE[data.cell.raw] || "badge-not-assessable" :
+        data.column.index === 7 ? STANCE_BADGE[data.cell.raw] || "badge-not-assessable" :
+        null;
+      if (badgeClass) {
+        const colors = PDF_BADGE_COLORS[badgeClass];
+        data.cell.styles.fillColor = colors.bg;
+        data.cell.styles.textColor = colors.text;
+        data.cell.styles.fontStyle = "bold";
       }
     },
     didDrawCell: (data) => {
