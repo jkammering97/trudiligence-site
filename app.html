@@ -78,6 +78,13 @@
     --row-hover: #212327;
   }
   * { box-sizing: border-box; }
+  /* Without this, any element also styled with its own `display` (like
+     .modal-overlay's `display: flex` below) permanently overrides the
+     browser's default `[hidden] { display: none }` UA rule -- author
+     styles beat user-agent styles regardless of selector specificity, so
+     the confirm modal stayed visible no matter what its `hidden` attribute
+     was set to. */
+  [hidden] { display: none !important; }
   html, body {
     margin: 0;
     background: var(--paper);
@@ -109,6 +116,10 @@
 
   main.dash { padding: 28px 0 64px; }
 
+  .welcome-heading {
+    font-family: 'Newsreader', serif; font-weight: 500; font-size: 26px;
+    margin: 0 0 18px; color: var(--ink);
+  }
   .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--hairline); }
   .tabs button {
     border: none; background: none; padding: 10px 4px; margin-right: 20px; font-family: inherit;
@@ -269,6 +280,7 @@
     <div id="gate" class="gate">Loading your account…</div>
 
     <div id="dashboard" hidden>
+      <h1 id="welcome-heading" class="welcome-heading" hidden></h1>
       <div class="tabs">
         <button data-tab="searches" class="is-active">Searches</button>
         <button data-tab="sources">Sources</button>
@@ -469,6 +481,29 @@ document.getElementById("signout-btn").addEventListener("click", () => {
   signOut();
   window.location.href = "index.html";
 });
+
+// Best-effort: a failed fetch here just leaves the heading hidden rather
+// than blocking the dashboard or showing an error banner over it -- the
+// signed-in-as email in the header is the load-bearing identity display,
+// this is a nice-to-have greeting on top of it.
+(async function loadWelcomeGreeting() {
+  try {
+    const { rows } = await pgSelectPage("profiles", {
+      select: "display_name",
+      params: { id: `eq.${currentUser().id}` },
+      from: 0,
+      to: 0
+    });
+    const displayName = rows[0]?.display_name || currentUser()?.email;
+    if (!displayName) return;
+    const heading = document.getElementById("welcome-heading");
+    heading.textContent = `Welcome back, ${displayName}!`;
+    heading.hidden = false;
+  } catch (err) {
+    if (handleAuthFailure(err)) return;
+    // Silent otherwise -- see comment above.
+  }
+})();
 
 // ---------- Tabs ----------
 
