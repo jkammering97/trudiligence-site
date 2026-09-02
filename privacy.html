@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Privacy Policy — according to</title>
 <meta name="description" content="What according to collects, why, and where it's stored." />
@@ -17,10 +18,35 @@
     --paper: #F4F1EA;
     --white: #FFFFFF;
     --link: #1F3FA8;
+    --link-hover: #16307E;
     --body-text: #57544C;
     --meta: #8A8578;
     --hairline: #E2DDD0;
     --hairline-soft: #EDE9DD;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE8DD;
+      --paper: #18191C;
+      --white: #212226;
+      --link: #7C93E8;
+      --link-hover: #A9BEF2;
+      --body-text: #B8B4A8;
+      --meta: #9A968A;
+      --hairline: #2E2F34;
+      --hairline-soft: #26272B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE8DD;
+    --paper: #18191C;
+    --white: #212226;
+    --link: #7C93E8;
+    --link-hover: #A9BEF2;
+    --body-text: #B8B4A8;
+    --meta: #9A968A;
+    --hairline: #2E2F34;
+    --hairline-soft: #26272B;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -31,7 +57,7 @@
     line-height: 1.6;
   }
   a { color: var(--link); }
-  a:hover { color: #16307E; }
+  a:hover { color: var(--link-hover); }
   .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
 
   header.top {
@@ -39,11 +65,23 @@
     padding: 20px 0;
     border-bottom: 1px solid var(--hairline-soft);
   }
+  .top-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
   .brand {
     display: flex;
     align-items: center;
     gap: 10px;
   }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
+    font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--paper); }
   .mark {
     width: 34px;
     height: 34px;
@@ -121,8 +159,8 @@
 <body>
 
 <header class="top">
-  <div class="wrap brand">
-    <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+  <div class="wrap top-inner">
+    <a class="brand" href="index.html" style="text-decoration:none; color:inherit;">
       <div class="mark">
         <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
       </div>
@@ -131,6 +169,7 @@
         <div class="tagline">evidence you can inspect</div>
       </div>
     </a>
+    <button type="button" id="theme-toggle" class="theme-toggle"></button>
   </div>
 </header>
 
@@ -195,6 +234,16 @@
     leaves your device except your session token, which is sent to
     authenticate your own calls to our backend.</p>
 
+    <p><strong>On your device, via your browser's <code>localStorage</code>,
+    if you use the web dashboard at accordingto.app/app.html.</strong> The
+    web dashboard (Sources and Searches, viewable outside the extension) is
+    the same account as the extension and stores the same kind of sign-in
+    session — access and refresh tokens, plus your user id/email — in your
+    browser's local storage instead of Chrome's <code>storage</code> API.
+    It talks directly to Supabase (see below) using that session, the same
+    way the extension does; no separate account or password is involved.
+    Signing out on the dashboard clears this from your browser.</p>
+
     <h2>How your data is processed</h2>
 
     <p>Checking a claim involves a few third-party services along
@@ -256,8 +305,9 @@
     <h2>How we secure your data</h2>
 
     <ul>
-      <li>All traffic between the extension, our backend, and every
-      third-party service above travels over HTTPS.</li>
+      <li>All traffic between the extension, the web dashboard, our
+      backend, and every third-party service above travels over
+      HTTPS.</li>
       <li>Your BYOK Anthropic API key, if you provide one, is encrypted
       at rest (Fernet/AES) before it's stored, and only decrypted in
       memory at the moment it's used to make an API call on your
@@ -326,6 +376,11 @@
     </span>
   </div>
 </footer>
+
+<script type="module">
+  import { initThemeToggle } from "./assets/theme.js";
+  initThemeToggle(document.getElementById("theme-toggle"));
+</script>
 
 </body>
 </html>

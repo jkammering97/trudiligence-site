@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>according to […] — evidence you can inspect</title>
 <meta name="description" content="according to is a Chrome extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim." />
@@ -19,6 +20,7 @@
     --slot: #EFE47A;
     --bracket: #8A7A22;
     --link: #1F3FA8;
+    --link-hover: #16307E;
     --sourced: #2F6B4F;
     --no-source: #B98A2E;
     --no-source-text: #8A6318;
@@ -30,6 +32,46 @@
     --hairline: #E2DDD0;
     --hairline-soft: #EDE9DD;
   }
+  /* Dark palette follows the system setting by default; an explicit toggle
+     (data-theme) overrides it either way — see assets/theme.js. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE8DD;
+      --paper: #18191C;
+      --white: #212226;
+      --bracket: #D9C862;
+      --link: #7C93E8;
+      --link-hover: #A9BEF2;
+      --sourced: #5FBE8F;
+      --no-source: #D9A748;
+      --no-source-text: #E0B458;
+      --contradicted: #E2776A;
+      --contradicted-text: #E2776A;
+      --not-assessable: #9C9888;
+      --body-text: #B8B4A8;
+      --meta: #9A968A;
+      --hairline: #2E2F34;
+      --hairline-soft: #26272B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE8DD;
+    --paper: #18191C;
+    --white: #212226;
+    --bracket: #D9C862;
+    --link: #7C93E8;
+    --link-hover: #A9BEF2;
+    --sourced: #5FBE8F;
+    --no-source: #D9A748;
+    --no-source-text: #E0B458;
+    --contradicted: #E2776A;
+    --contradicted-text: #E2776A;
+    --not-assessable: #9C9888;
+    --body-text: #B8B4A8;
+    --meta: #9A968A;
+    --hairline: #2E2F34;
+    --hairline-soft: #26272B;
+  }
   * { box-sizing: border-box; }
   html, body {
     margin: 0;
@@ -39,7 +81,7 @@
     line-height: 1.6;
   }
   a { color: var(--link); }
-  a:hover { color: #16307E; }
+  a:hover { color: var(--link-hover); }
   .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
 
   header.top {
@@ -47,11 +89,36 @@
     padding: 20px 0;
     border-bottom: 1px solid var(--hairline-soft);
   }
+  .top-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
   .brand {
     display: flex;
     align-items: center;
     gap: 10px;
   }
+  .nav-account {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 7px 14px;
+    background: var(--white);
+  }
+  .nav-account:hover { background: var(--paper); }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
+    font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--paper); }
   .mark {
     width: 34px;
     height: 34px;
@@ -251,13 +318,19 @@
 <body>
 
 <header class="top">
-  <div class="wrap brand">
-    <div class="mark">
-      <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+  <div class="wrap top-inner">
+    <div class="brand">
+      <div class="mark">
+        <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+      </div>
+      <div>
+        <div class="wordmark">according to</div>
+        <div class="tagline">evidence you can inspect</div>
+      </div>
     </div>
-    <div>
-      <div class="wordmark">according to</div>
-      <div class="tagline">evidence you can inspect</div>
+    <div class="nav-right">
+      <button type="button" id="theme-toggle" class="theme-toggle"></button>
+      <a id="nav-account-link" class="nav-account" href="login.html">Sign in</a>
     </div>
   </div>
 </header>
@@ -353,6 +426,17 @@
     </span>
   </div>
 </footer>
+
+<script type="module">
+  import { getSession } from "./assets/supabase.js";
+  import { initThemeToggle } from "./assets/theme.js";
+  const link = document.getElementById("nav-account-link");
+  if (getSession()) {
+    link.textContent = "Dashboard";
+    link.href = "app.html";
+  }
+  initThemeToggle(document.getElementById("theme-toggle"));
+</script>
 
 </body>
 </html>

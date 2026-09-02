@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script src="assets/theme-init.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Dashboard — according to</title>
+<meta name="description" content="Manage your according to Sources (trusted domains) and inspect your Searches history." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #16171B;
+    --paper: #F4F1EA;
+    --white: #FFFFFF;
+    --slot: #EFE47A;
+    --link: #1F3FA8;
+    --sourced: #2F6B4F;
+    --sourced-bg: #E9F3EC;
+    --no-source: #B98A2E;
+    --no-source-text: #8A6318;
+    --no-source-bg: #FBF2E1;
+    --contradicted: #C0392B;
+    --contradicted-text: #A32E22;
+    --contradicted-bg: #FBEAE7;
+    --not-assessable: #8A8578;
+    --not-assessable-bg: #ECEAE3;
+    --body-text: #57544C;
+    --meta: #8A8578;
+    --hairline: #E2DDD0;
+    --hairline-soft: #EDE9DD;
+    --row-hover: #FCFBF8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE8DD;
+      --paper: #18191C;
+      --white: #212226;
+      --link: #7C93E8;
+      --sourced: #5FBE8F;
+      --sourced-bg: #16261E;
+      --no-source: #D9A748;
+      --no-source-text: #E0B458;
+      --no-source-bg: #2A2115;
+      --contradicted: #E2776A;
+      --contradicted-text: #E2776A;
+      --contradicted-bg: #2E1917;
+      --not-assessable: #9C9888;
+      --not-assessable-bg: #232428;
+      --body-text: #B8B4A8;
+      --meta: #9A968A;
+      --hairline: #2E2F34;
+      --hairline-soft: #26272B;
+      --row-hover: #212327;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE8DD;
+    --paper: #18191C;
+    --white: #212226;
+    --link: #7C93E8;
+    --sourced: #5FBE8F;
+    --sourced-bg: #16261E;
+    --no-source: #D9A748;
+    --no-source-text: #E0B458;
+    --no-source-bg: #2A2115;
+    --contradicted: #E2776A;
+    --contradicted-text: #E2776A;
+    --contradicted-bg: #2E1917;
+    --not-assessable: #9C9888;
+    --not-assessable-bg: #232428;
+    --body-text: #B8B4A8;
+    --meta: #9A968A;
+    --hairline: #2E2F34;
+    --hairline-soft: #26272B;
+    --row-hover: #212327;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: var(--link); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  .wrap-wide { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  header.top { background: var(--white); padding: 16px 0; border-bottom: 1px solid var(--hairline-soft); }
+  .top-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+  .mark { width: 32px; height: 32px; border-radius: 8px; background: var(--ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mark svg { width: 20px; height: 20px; }
+  .wordmark { font-family: 'Newsreader', serif; font-weight: 500; font-size: 18px; white-space: nowrap; }
+  .tagline { font-family: 'Public Sans', sans-serif; font-size: 10.5px; font-weight: 500; color: var(--meta); margin-top: 1px; }
+  .account { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--body-text); }
+  .account .email { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); }
+  .btn-signout { background: var(--white); border: 1px solid var(--hairline); border-radius: 6px; padding: 7px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--ink); }
+  .btn-signout:hover { background: var(--paper); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
+    font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--paper); }
+
+  main.dash { padding: 28px 0 64px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--hairline); }
+  .tabs button {
+    border: none; background: none; padding: 10px 4px; margin-right: 20px; font-family: inherit;
+    font-weight: 700; font-size: 14.5px; color: var(--meta); cursor: pointer; border-bottom: 2px solid transparent; position: relative; top: 1px;
+  }
+  .tabs button.is-active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  .panel { display: none; }
+  .panel.is-active { display: block; }
+
+  .card { background: var(--white); border: 1px solid var(--hairline); border-radius: 10px; }
+
+  .toolbar { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; padding: 16px 18px; border-bottom: 1px solid var(--hairline-soft); }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11px; font-weight: 700; color: var(--meta); text-transform: uppercase; letter-spacing: 0.03em; }
+  select, .toolbar input[type="text"], .toolbar input[type="search"] {
+    font-family: inherit; font-size: 13px; padding: 7px 9px; border: 1px solid var(--hairline); border-radius: 6px; background: var(--paper); color: var(--ink);
+  }
+  .spacer { flex: 1; }
+  .btn { font-family: inherit; font-weight: 700; font-size: 12.5px; border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid var(--hairline); background: var(--white); color: var(--ink); }
+  .btn:hover { background: var(--paper); }
+  .btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn-primary:hover { filter: brightness(0.9); }
+  .btn-danger { color: var(--contradicted); }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  .btn-sm { padding: 5px 10px; font-size: 11.5px; }
+
+  .icon-btn {
+    border: none; background: none; color: var(--meta); font-size: 16px; line-height: 1;
+    padding: 2px 6px; cursor: pointer; font-family: inherit; border-radius: 4px;
+  }
+  .icon-btn:hover { color: var(--contradicted); }
+
+  .row-actions { display: flex; justify-content: flex-end; }
+  .confirm-delete { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .confirm-text { font-size: 12px; font-weight: 700; color: var(--contradicted-text); }
+  .btn-confirm-yes, .btn-confirm-no {
+    border: 1px solid var(--hairline); background: var(--white); border-radius: 5px; padding: 3px 9px;
+    font-family: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; color: var(--ink);
+  }
+  .btn-confirm-yes { background: var(--contradicted); border-color: var(--contradicted); color: #fff; }
+  .btn-confirm-yes:hover { background: var(--contradicted-text); border-color: var(--contradicted-text); }
+  .btn-confirm-no:hover { background: var(--paper); }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    position: sticky; top: 0; background: var(--white); text-align: left; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.03em; color: var(--meta); padding: 10px 12px; border-bottom: 1px solid var(--hairline); white-space: nowrap;
+  }
+  .sort-th {
+    border: none; background: none; padding: 0; margin: 0; cursor: pointer; font: inherit; color: inherit;
+    text-transform: inherit; letter-spacing: inherit; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .sort-th:hover { color: var(--ink); }
+  .sort-arrow { font-size: 9px; width: 8px; display: inline-block; }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--hairline-soft); vertical-align: middle; }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody tr.is-expanded { background: var(--row-hover); }
+  .row-detail td { background: var(--paper); padding: 0; }
+  .row-detail-inner { padding: 14px 18px 18px; }
+
+  .cell-muted { color: var(--meta); }
+  .mono { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .claim-text { max-width: 360px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .badge-sourced { background: var(--sourced-bg); color: var(--sourced); }
+  .badge-no-source { background: var(--no-source-bg); color: var(--no-source-text); }
+  .badge-contradicted { background: var(--contradicted-bg); color: var(--contradicted-text); }
+  .badge-not-assessable { background: var(--not-assessable-bg); color: var(--not-assessable); }
+
+  .chevron-btn { background: none; border: none; cursor: pointer; color: var(--meta); padding: 4px; font-size: 13px; }
+  .chevron-btn:hover { color: var(--ink); }
+
+  .source-list { display: flex; flex-direction: column; gap: 8px; }
+  .source-row { display: grid; grid-template-columns: 170px 90px 90px 1fr; gap: 12px; align-items: start; padding: 8px 10px; background: var(--white); border: 1px solid var(--hairline-soft); border-radius: 6px; font-size: 12.5px; }
+  .source-row .domain a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  .source-row .domain a:hover { text-decoration: underline; }
+  .source-row .snippet { color: var(--body-text); }
+  .no-sources-note { color: var(--meta); font-size: 12.5px; padding: 4px 10px; }
+
+  .cell-input { width: 100%; border: 1px solid transparent; background: transparent; font-family: inherit; font-size: 13px; padding: 5px 7px; border-radius: 5px; color: var(--ink); }
+  .cell-input:hover { border-color: var(--hairline); }
+  .cell-input:focus { border-color: var(--ink); background: var(--paper); outline: none; }
+  .cell-input.has-error { border-color: var(--contradicted); }
+
+  .level-picker { display: flex; gap: 4px; flex-wrap: wrap; }
+  .level-btn {
+    border: 1px solid var(--hairline); background: var(--white); color: var(--meta);
+    border-radius: 999px; padding: 4px 11px; font-size: 11.5px; font-weight: 700;
+    cursor: pointer; font-family: inherit; line-height: 1.4;
+  }
+  .level-btn:hover { border-color: var(--ink); }
+  .level-btn.is-active.low { background: var(--contradicted-bg); color: var(--contradicted-text); border-color: transparent; }
+  .level-btn.is-active.medium { background: var(--no-source-bg); color: var(--no-source-text); border-color: transparent; }
+  .level-btn.is-active.high { background: var(--sourced-bg); color: var(--sourced); border-color: transparent; }
+
+  .star-btn {
+    border: none; background: none; cursor: pointer; font-size: 19px; line-height: 1; padding: 2px 4px;
+    color: var(--hairline); font-family: inherit;
+  }
+  .star-btn.is-active { color: #C9A227; }
+  .star-btn:hover { color: #C9A227; }
+
+  .cell-error { font-size: 11px; color: var(--contradicted); margin-top: 2px; }
+
+  .add-row-form { display: flex; align-items: flex-end; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--hairline-soft); flex-wrap: wrap; }
+  .add-row-form input[type="text"] { min-width: 200px; }
+
+  .pagination { display: flex; align-items: center; gap: 12px; padding: 14px 18px; font-size: 12.5px; color: var(--body-text); }
+  .pagination .spacer { flex: 1; }
+
+  .empty-state { padding: 46px 20px; text-align: center; color: var(--meta); font-size: 14px; }
+  .status-msg { padding: 10px 18px; font-size: 12.5px; }
+  .status-msg.is-error { color: var(--contradicted); }
+  .status-msg.is-ok { color: var(--sourced); }
+
+  .gate { padding: 90px 0; text-align: center; color: var(--meta); }
+
+  footer { padding: 32px 0 48px; color: var(--meta); font-size: 12.5px; text-align: center; }
+  footer a { color: var(--body-text); }
+
+  @media (max-width: 640px) {
+    .source-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap-wide top-inner">
+    <a class="brand" href="index.html">
+      <div class="mark">
+        <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+      </div>
+      <div>
+        <div class="wordmark">according to</div>
+        <div class="tagline">evidence you can inspect</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <button type="button" id="theme-toggle" class="theme-toggle"></button>
+      <div class="account" id="account-box" hidden>
+        <span>Signed in as <span class="email" id="account-email"></span></span>
+        <button class="btn-signout" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="dash">
+  <div class="wrap-wide">
+
+    <div id="gate" class="gate">Loading your account…</div>
+
+    <div id="dashboard" hidden>
+      <div class="tabs">
+        <button data-tab="searches" class="is-active">Searches</button>
+        <button data-tab="sources">Sources</button>
+      </div>
+
+      <!-- ===================== SEARCHES ===================== -->
+      <section id="panel-searches" class="panel is-active">
+        <div class="card">
+          <div class="toolbar">
+            <div class="field">
+              <label for="s-range">Date range</label>
+              <select id="s-range">
+                <option value="24">Last 24 hours</option>
+                <option value="168">Last 7 days</option>
+                <option value="720">Last 30 days</option>
+                <option value="all" selected>All time</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-verdict">Verdict</label>
+              <select id="s-verdict">
+                <option value="">All verdicts</option>
+                <option value="sourced">Sourced</option>
+                <option value="no source found">No source found</option>
+                <option value="contradicted">Contradicted</option>
+                <option value="not assessable">Not assessable</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-filter">Filter claim text</label>
+              <input id="s-filter" type="search" placeholder="Contains…" />
+            </div>
+            <div class="field">
+              <label for="s-pagesize">Rows per page</label>
+              <select id="s-pagesize">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+            <div class="spacer"></div>
+            <button class="btn" id="s-download-csv">Download CSV</button>
+            <button class="btn" id="s-download-pdf">Download PDF</button>
+          </div>
+
+          <div id="searches-status" class="status-msg"></div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Checked</th>
+                  <th>Claim</th>
+                  <th>Verdict</th>
+                  <th>Confidence</th>
+                  <th>Sources</th>
+                  <th>Model</th>
+                </tr>
+              </thead>
+              <tbody id="searches-tbody"></tbody>
+            </table>
+          </div>
+          <div id="searches-empty" class="empty-state" hidden>No searches yet — results from the Chrome extension will show up here.</div>
+
+          <div class="pagination">
+            <span id="searches-range-label"></span>
+            <div class="spacer"></div>
+            <button class="btn btn-sm" id="searches-prev">← Prev</button>
+            <span id="searches-page-label"></span>
+            <button class="btn btn-sm" id="searches-next">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SOURCES ===================== -->
+      <section id="panel-sources" class="panel">
+        <div class="card">
+          <form class="add-row-form" id="add-source-form">
+            <div class="field">
+              <label for="new-domain">Add a domain</label>
+              <input id="new-domain" type="text" placeholder="e.g. reuters.com" required />
+            </div>
+            <div class="field">
+              <label>Trust score</label>
+              <div class="level-picker" id="new-domain-level"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add source</button>
+            <div class="spacer"></div>
+            <div class="field">
+              <label for="trust-scale-select">Trust scale</label>
+              <select id="trust-scale-select">
+                <option value="bucket">Low / Medium / High</option>
+                <option value="likert5">1–5</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="src-filter">Filter</label>
+              <input id="src-filter" type="search" placeholder="Filter domains…" style="min-width:180px;" />
+            </div>
+            <div class="field">
+              <label for="src-pagesize">Rows per page</label>
+              <select id="src-pagesize">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </form>
+
+          <div id="sources-status" class="status-msg"></div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:36%">Domain</th>
+                  <th style="width:22%"><button type="button" class="sort-th" id="th-trust-sort">Trust score<span class="sort-arrow" id="trust-sort-arrow"></span></button></th>
+                  <th title="Searched directly, up to 5 at a time">Priority search</th>
+                  <th>Added</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="sources-tbody"></tbody>
+            </table>
+          </div>
+          <div id="sources-empty" class="empty-state" hidden>No sources yet — add a domain above, or add one from the extension's Sources tab.</div>
+
+          <div class="pagination">
+            <span id="sources-range-label"></span>
+            <div class="spacer"></div>
+            <button class="btn btn-sm" id="sources-prev">← Prev</button>
+            <span id="sources-page-label"></span>
+            <button class="btn btn-sm" id="sources-next">Next →</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="index.html">according to</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a>
+</footer>
+
+<script src="assets/lib/jspdf.umd.min.js"></script>
+<script src="assets/lib/jspdf.plugin.autotable.min.js"></script>
+<script type="module">
+import { getSession, currentUser, signOut, pgSelectPage, pgInsert, pgUpdate, pgDelete, SessionExpiredError } from "./assets/supabase.js";
+import { escapeHtml, safeHref, normalizeDomain, formatDate, formatPct, downloadBlob, csvField } from "./assets/util.js";
+import {
+  TRUST_SCALE_STEPS,
+  TRUST_SCALE_DEFAULT_SCORE,
+  PRIORITY_CAP,
+  trustBucket,
+  trustScoreText,
+  nearestTrustStep,
+  getTrustScaleMode,
+  setTrustScaleMode
+} from "./assets/trust-scale.js";
+import { initThemeToggle } from "./assets/theme.js";
+
+initThemeToggle(document.getElementById("theme-toggle"));
+
+// ---------- Auth gate ----------
+
+const session = getSession();
+if (!session) {
+  window.location.replace(`login.html?next=${encodeURIComponent("app.html")}`);
+}
+
+function handleAuthFailure(err) {
+  if (err instanceof SessionExpiredError) {
+    window.location.replace(`login.html?next=${encodeURIComponent("app.html")}`);
+    return true;
+  }
+  return false;
+}
+
+document.getElementById("gate").hidden = true;
+document.getElementById("dashboard").hidden = false;
+document.getElementById("account-box").hidden = false;
+document.getElementById("account-email").textContent = currentUser()?.email || "";
+
+document.getElementById("signout-btn").addEventListener("click", () => {
+  signOut();
+  window.location.href = "index.html";
+});
+
+// ---------- Tabs ----------
+
+const tabButtons = document.querySelectorAll(".tabs button");
+const panels = {
+  searches: document.getElementById("panel-searches"),
+  sources: document.getElementById("panel-sources")
+};
+function activateTab(name) {
+  tabButtons.forEach((b) => b.classList.toggle("is-active", b.dataset.tab === name));
+  for (const [key, el] of Object.entries(panels)) el.classList.toggle("is-active", key === name);
+  if (window.location.hash !== `#${name}`) history.replaceState(null, "", `#${name}`);
+}
+tabButtons.forEach((b) => b.addEventListener("click", () => activateTab(b.dataset.tab)));
+activateTab(window.location.hash === "#sources" ? "sources" : "searches");
+
+// ---------- Trust scale (shared by the Searches source detail view and the Sources tab) ----------
+// Mirrors extension/popup.js's own bucket/1-5 picker exactly — see assets/trust-scale.js.
+
+let trustScaleMode = getTrustScaleMode();
+const TRUST_BUCKET_BADGE = { low: "badge-contradicted", medium: "badge-no-source", high: "badge-sourced", unrated: "badge-not-assessable" };
+
+function levelPickerHtml(currentScore) {
+  const nearest = nearestTrustStep(trustScaleMode, currentScore);
+  return TRUST_SCALE_STEPS[trustScaleMode]
+    .map((step) => {
+      const isActive = step.score === nearest.score;
+      return `<button type="button" class="level-btn${isActive ? ` is-active ${trustBucket(step.score)}` : ""}" data-score="${step.score}">${escapeHtml(step.text)}</button>`;
+    })
+    .join("");
+}
+
+const trustScaleSelect = document.getElementById("trust-scale-select");
+trustScaleSelect.value = trustScaleMode;
+trustScaleSelect.addEventListener("change", () => {
+  trustScaleMode = trustScaleSelect.value;
+  setTrustScaleMode(trustScaleMode);
+  renderNewSourceLevelPicker();
+  loadSearches();
+  loadSources();
+});
+
+// ================= SEARCHES =================
+
+const VERDICT_BADGE = {
+  "sourced": "badge-sourced",
+  "no source found": "badge-no-source",
+  "contradicted": "badge-contradicted",
+  "not assessable": "badge-not-assessable"
+};
+const STANCE_BADGE = { supports: "badge-sourced", refutes: "badge-contradicted" };
+
+const MODEL_LABELS = { "claude-haiku-4-5": "Claude Haiku", "gpt-5-mini": "GPT-5 mini" };
+
+let searchesPage = 0;
+let searchesTotal = 0;
+let searchesExpanded = new Set();
+
+function searchesPageSize() {
+  return parseInt(document.getElementById("s-pagesize").value, 10);
+}
+
+function searchesFilterParams() {
+  const params = {};
+  const range = document.getElementById("s-range").value;
+  if (range !== "all") {
+    const since = new Date(Date.now() - parseInt(range, 10) * 3600 * 1000).toISOString();
+    params["created_at"] = `gte.${since}`;
+  }
+  const verdict = document.getElementById("s-verdict").value;
+  if (verdict) params["verdict"] = `eq.${verdict}`;
+  const text = document.getElementById("s-filter").value.trim();
+  if (text) params["claim"] = `ilike.*${text.replace(/[*,]/g, "")}*`;
+  return params;
+}
+
+function verdictBadgeHtml(verdict) {
+  const cls = VERDICT_BADGE[(verdict || "").toLowerCase()] || "badge-not-assessable";
+  return `<span class="badge ${cls}">${escapeHtml(verdict || "not assessable")}</span>`;
+}
+
+function sourceRowHtml(source) {
+  const href = source.url ? safeHref(source.url) : "";
+  const domainHtml = href
+    ? `<a href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.domain || href)}</a>`
+    : escapeHtml(source.domain || "");
+  const stanceCls = STANCE_BADGE[source.stance] || "badge-not-assessable";
+  const trustCls = TRUST_BUCKET_BADGE[trustBucket(source.trust_score)];
+  return `
+    <div class="source-row">
+      <div class="domain">${domainHtml}</div>
+      <div><span class="badge ${trustCls}">${escapeHtml(trustScoreText(trustScaleMode, source.trust_score))}</span></div>
+      <div><span class="badge ${stanceCls}">${escapeHtml(source.stance || "unrelated")}</span></div>
+      <div class="snippet">${escapeHtml(source.snippet || "")}</div>
+    </div>`;
+}
+
+function searchRowHtml(row, isExpanded) {
+  const sources = Array.isArray(row.sources) ? row.sources : [];
+  return `
+    <tr data-id="${escapeHtml(row.id)}" class="search-row ${isExpanded ? "is-expanded" : ""}">
+      <td><button class="chevron-btn" data-expand="${escapeHtml(row.id)}">${isExpanded ? "▾" : "▸"}</button></td>
+      <td class="cell-muted mono">${escapeHtml(formatDate(row.created_at))}</td>
+      <td class="claim-text">${escapeHtml(row.claim || "")}</td>
+      <td>${verdictBadgeHtml(row.verdict)}</td>
+      <td class="mono">${formatPct(row.confidence)}</td>
+      <td class="cell-muted">${sources.length}</td>
+      <td class="cell-muted">${escapeHtml(MODEL_LABELS[row.llm_model] || row.llm_model || "—")}</td>
+    </tr>
+    ${isExpanded ? `
+    <tr class="row-detail">
+      <td colspan="7">
+        <div class="row-detail-inner">
+          ${sources.length
+            ? `<div class="source-list">${sources.map(sourceRowHtml).join("")}</div>`
+            : `<div class="no-sources-note">No sources were used for this result.</div>`}
+        </div>
+      </td>
+    </tr>` : ""}
+  `;
+}
+
+async function loadSearches() {
+  const statusEl = document.getElementById("searches-status");
+  statusEl.className = "status-msg";
+  statusEl.textContent = "Loading…";
+  const size = searchesPageSize();
+  try {
+    const { rows, total } = await pgSelectPage("searches", {
+      order: "created_at.desc",
+      params: searchesFilterParams(),
+      from: searchesPage * size,
+      to: searchesPage * size + size - 1
+    });
+    searchesTotal = total;
+    statusEl.textContent = "";
+    document.getElementById("searches-empty").hidden = total > 0;
+    document.getElementById("searches-tbody").innerHTML = rows.map((r) => searchRowHtml(r, searchesExpanded.has(r.id))).join("");
+    document.querySelectorAll("[data-expand]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.expand;
+        if (searchesExpanded.has(id)) searchesExpanded.delete(id);
+        else searchesExpanded.add(id);
+        loadSearches();
+      });
+    });
+    const from = total === 0 ? 0 : searchesPage * size + 1;
+    const to = Math.min(total, searchesPage * size + size);
+    document.getElementById("searches-range-label").textContent = `${from}–${to} of ${total}`;
+    document.getElementById("searches-page-label").textContent = `Page ${searchesPage + 1} of ${Math.max(1, Math.ceil(total / size))}`;
+    document.getElementById("searches-prev").disabled = searchesPage === 0;
+    document.getElementById("searches-next").disabled = (searchesPage + 1) * size >= total;
+  } catch (err) {
+    if (handleAuthFailure(err)) return;
+    statusEl.className = "status-msg is-error";
+    statusEl.textContent = err.message;
+  }
+}
+
+document.getElementById("s-range").addEventListener("change", () => { searchesPage = 0; loadSearches(); });
+document.getElementById("s-verdict").addEventListener("change", () => { searchesPage = 0; loadSearches(); });
+document.getElementById("s-pagesize").addEventListener("change", () => { searchesPage = 0; loadSearches(); });
+let filterDebounce;
+document.getElementById("s-filter").addEventListener("input", () => {
+  clearTimeout(filterDebounce);
+  filterDebounce = setTimeout(() => { searchesPage = 0; loadSearches(); }, 350);
+});
+document.getElementById("searches-prev").addEventListener("click", () => { if (searchesPage > 0) { searchesPage--; loadSearches(); } });
+document.getElementById("searches-next").addEventListener("click", () => {
+  if ((searchesPage + 1) * searchesPageSize() < searchesTotal) { searchesPage++; loadSearches(); }
+});
+
+// ---- Download (fetches every matching row, not just the current page) ----
+// Column set and PDF layout mirror extension/popup.js's own download-searches
+// feature exactly (same headers, same "Trust Level" bucket column, same
+// hyperlinked domain cell) — CSV additionally appends a plain Source URL
+// column at the end, which a spreadsheet can use but a rendered PDF can't.
+
+const EXPORT_HEADERS = ["Claim", "Verdict", "Confidence", "Checked At", "AI Model", "Source Domain", "Trust Level", "Stance", "Snippet"];
+const EXPORT_SOURCE_DOMAIN_COL = 5;
+const DOWNLOAD_RANGE_LABELS = { "24": "the last 24 hours", "168": "the last 7 days", "720": "the last 30 days", all: "your whole history" };
+const MAX_EXPORT_ROWS = 5000;
+
+async function fetchAllMatchingSearches() {
+  const params = searchesFilterParams();
+  const pageSize = 500;
+  let from = 0;
+  let all = [];
+  while (true) {
+    const { rows, total } = await pgSelectPage("searches", { order: "created_at.desc", params, from, to: from + pageSize - 1 });
+    all = all.concat(rows);
+    if (all.length >= total || all.length >= MAX_EXPORT_ROWS) break;
+    from += pageSize;
+  }
+  return all;
+}
+
+/** Flattens searches (with nested per-source arrays) into one export row per
+ * source, or one row per search if it has none — same shape as extension/
+ * popup.js's buildExportRows, `url` kept alongside `cells` (not in it) so
+ * it can drive a hyperlink without becoming its own visible column. */
+function buildExportRows(searches) {
+  const rows = [];
+  for (const s of searches) {
+    const base = [s.claim || "", s.verdict || "", formatPct(s.confidence), formatDate(s.created_at), MODEL_LABELS[s.llm_model] || s.llm_model || ""];
+    const sources = Array.isArray(s.sources) && s.sources.length ? s.sources : [null];
+    for (const src of sources) {
+      rows.push({
+        cells: [
+          ...base,
+          src ? src.domain || "" : "",
+          src ? trustBucket(src.trust_score) : "",
+          src ? src.stance || "" : "",
+          src ? src.snippet || "" : ""
+        ],
+        url: src ? src.url || "" : ""
+      });
+    }
+  }
+  return rows;
+}
+
+function exportFilenameBase() {
+  const range = document.getElementById("s-range").value;
+  const tag = range === "all" ? "all-time" : `last-${range}h`;
+  return `according-to-searches-${tag}-${new Date().toISOString().slice(0, 10)}`;
+}
+
+function downloadRowsAsCsv(rows) {
+  const headers = [...EXPORT_HEADERS, "Source URL"];
+  const lines = [headers, ...rows.map((r) => [...r.cells, r.url])];
+  const csv = lines.map((r) => r.map(csvField).join(",")).join("\r\n");
+  downloadBlob(`${exportFilenameBase()}.csv`, csv, "text/csv;charset=utf-8;");
+}
+
+function downloadRowsAsPdf(rows) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape" });
+  doc.setFontSize(14);
+  const rangeLabel = DOWNLOAD_RANGE_LABELS[document.getElementById("s-range").value] || "the selected range";
+  doc.text(`according to — Searches (${rangeLabel})`, 14, 15);
+  doc.autoTable({
+    startY: 20,
+    head: [EXPORT_HEADERS],
+    body: rows.map((r) => r.cells),
+    styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
+    headStyles: { fillColor: [22, 23, 27] },
+    didParseCell: (data) => {
+      const row = data.section === "body" ? rows[data.row.index] : null;
+      if (row && data.column.index === EXPORT_SOURCE_DOMAIN_COL && row.url) {
+        data.cell.styles.textColor = [31, 63, 168];
+      }
+    },
+    didDrawCell: (data) => {
+      if (data.section !== "body" || data.column.index !== EXPORT_SOURCE_DOMAIN_COL) return;
+      const row = rows[data.row.index];
+      const url = row && row.url;
+      if (url) doc.link(data.cell.x, data.cell.y, data.cell.width, data.cell.height, { url });
+    }
+  });
+  doc.save(`${exportFilenameBase()}.pdf`);
+}
+
+async function handleDownload(kind) {
+  const statusEl = document.getElementById("searches-status");
+  statusEl.className = "status-msg";
+  statusEl.textContent = "Preparing download…";
+  try {
+    const searches = await fetchAllMatchingSearches();
+    if (searches.length === 0) {
+      statusEl.textContent = "No searches match the current filters.";
+      return;
+    }
+    const rows = buildExportRows(searches);
+    if (kind === "csv") downloadRowsAsCsv(rows);
+    else downloadRowsAsPdf(rows);
+    statusEl.className = "status-msg is-ok";
+    statusEl.textContent = `Downloaded ${searches.length} search${searches.length === 1 ? "" : "es"}${searches.length >= MAX_EXPORT_ROWS ? ` (capped at ${MAX_EXPORT_ROWS})` : ""}.`;
+  } catch (err) {
+    if (handleAuthFailure(err)) return;
+    statusEl.className = "status-msg is-error";
+    statusEl.textContent = err.message;
+  }
+}
+document.getElementById("s-download-csv").addEventListener("click", () => handleDownload("csv"));
+document.getElementById("s-download-pdf").addEventListener("click", () => handleDownload("pdf"));
+
+// ================= SOURCES =================
+
+let sourcesPage = 0;
+let sourcesTotal = 0;
+let priorityCount = 0; // total sources with priority_search=true, across all pages — enforces PRIORITY_CAP
+
+// Trust-score column sort: null falls back to the default order (priority-
+// starred first, then domain A-Z); "asc"/"desc" sorts by the raw
+// trust_score instead, taking over from the default ordering while active.
+// Defaults to "desc" (rather than null) on first load so the table opens
+// already sorted highest-trust-first — both a more useful starting view and
+// a way for people to actually notice the column is sortable at all.
+let sourcesTrustSort = "desc";
+
+function sourcesOrderParam() {
+  if (sourcesTrustSort) return `trust_score.${sourcesTrustSort},domain.asc`;
+  return "priority_search.desc,domain.asc";
+}
+
+function updateTrustSortArrow() {
+  document.getElementById("trust-sort-arrow").textContent =
+    sourcesTrustSort === "asc" ? "▲" : sourcesTrustSort === "desc" ? "▼" : "";
+}
+
+document.getElementById("th-trust-sort").addEventListener("click", () => {
+  sourcesTrustSort = sourcesTrustSort === "desc" ? "asc" : sourcesTrustSort === "asc" ? null : "desc";
+  updateTrustSortArrow();
+  sourcesPage = 0;
+  loadSources();
+});
+
+function sourcesPageSize() {
+  return parseInt(document.getElementById("src-pagesize").value, 10);
+}
+
+function sourcesFilterParams() {
+  const params = {};
+  const text = document.getElementById("src-filter").value.trim();
+  if (text) params["domain"] = `ilike.*${text.replace(/[*,]/g, "")}*`;
+  return params;
+}
+
+async function fetchPriorityCount() {
+  const { total } = await pgSelectPage("trusted_sources", { params: { priority_search: "eq.true" }, from: 0, to: 0 });
+  return total;
+}
+
+function sourceEditableRowHtml(row) {
+  return `
+    <tr data-id="${escapeHtml(row.id)}">
+      <td>
+        <input class="cell-input domain-input" type="text" value="${escapeHtml(row.domain)}" />
+        <div class="cell-error" hidden></div>
+      </td>
+      <td><div class="level-picker row-level-picker">${levelPickerHtml(row.trust_score)}</div></td>
+      <td><button type="button" class="star-btn priority-star${row.priority_search ? " is-active" : ""}" aria-label="Toggle priority search">${row.priority_search ? "★" : "☆"}</button></td>
+      <td class="cell-muted mono">${escapeHtml(formatDate(row.created_at))}</td>
+      <td>
+        <div class="row-actions">
+          <button type="button" class="icon-btn delete-btn" aria-label="Delete source" title="Delete">×</button>
+          <span class="confirm-delete" hidden>
+            <span class="confirm-text">Delete?</span>
+            <button type="button" class="btn-confirm-yes">Yes</button>
+            <button type="button" class="btn-confirm-no">No</button>
+          </span>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+async function loadSources() {
+  const statusEl = document.getElementById("sources-status");
+  statusEl.className = "status-msg";
+  statusEl.textContent = "Loading…";
+  const size = sourcesPageSize();
+  try {
+    const [{ rows, total }, count] = await Promise.all([
+      pgSelectPage("trusted_sources", {
+        order: sourcesOrderParam(),
+        params: sourcesFilterParams(),
+        from: sourcesPage * size,
+        to: sourcesPage * size + size - 1
+      }),
+      fetchPriorityCount()
+    ]);
+    sourcesTotal = total;
+    priorityCount = count;
+    statusEl.textContent = "";
+    document.getElementById("sources-empty").hidden = total > 0;
+    const tbody = document.getElementById("sources-tbody");
+    tbody.innerHTML = rows.map(sourceEditableRowHtml).join("");
+    wireSourceRow(tbody, rows);
+
+    const from = total === 0 ? 0 : sourcesPage * size + 1;
+    const to = Math.min(total, sourcesPage * size + size);
+    document.getElementById("sources-range-label").textContent = `${from}–${to} of ${total}`;
+    document.getElementById("sources-page-label").textContent = `Page ${sourcesPage + 1} of ${Math.max(1, Math.ceil(total / size))}`;
+    document.getElementById("sources-prev").disabled = sourcesPage === 0;
+    document.getElementById("sources-next").disabled = (sourcesPage + 1) * size >= total;
+  } catch (err) {
+    if (handleAuthFailure(err)) return;
+    statusEl.className = "status-msg is-error";
+    statusEl.textContent = err.message;
+  }
+}
+
+function wireSourceRow(tbody, rows) {
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  tbody.querySelectorAll("tr").forEach((tr) => {
+    const id = tr.dataset.id;
+    const row = byId.get(id);
+    const domainInput = tr.querySelector(".domain-input");
+    const errorEl = tr.querySelector(".cell-error");
+    const levelPicker = tr.querySelector(".row-level-picker");
+    const priorityStar = tr.querySelector(".priority-star");
+    const deleteBtn = tr.querySelector(".delete-btn");
+
+    levelPicker.querySelectorAll(".level-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const score = parseFloat(btn.dataset.score);
+        if (score === row.trust_score) return;
+        try {
+          await pgUpdate("trusted_sources", id, { trust_score: score });
+          row.trust_score = score;
+          levelPicker.querySelectorAll(".level-btn").forEach((b) => b.classList.remove("is-active", "low", "medium", "high"));
+          btn.classList.add("is-active", trustBucket(score));
+        } catch (err) {
+          if (handleAuthFailure(err)) return;
+          showRowError(errorEl, err.message);
+        }
+      });
+    });
+
+    priorityStar.addEventListener("click", async () => {
+      const turningOn = !row.priority_search;
+      if (turningOn && priorityCount >= PRIORITY_CAP) {
+        showRowError(errorEl, `Priority search is capped at ${PRIORITY_CAP} sources — unstar one first.`);
+        return;
+      }
+      priorityStar.disabled = true;
+      try {
+        await pgUpdate("trusted_sources", id, { priority_search: turningOn });
+        await loadSources();
+      } catch (err) {
+        if (handleAuthFailure(err)) return;
+        priorityStar.disabled = false;
+        showRowError(errorEl, err.message);
+      }
+    });
+
+    domainInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); domainInput.blur(); }
+      if (e.key === "Escape") { domainInput.value = row.domain; domainInput.blur(); }
+    });
+    domainInput.addEventListener("blur", async () => {
+      const normalized = normalizeDomain(domainInput.value);
+      errorEl.hidden = true;
+      domainInput.classList.remove("has-error");
+      if (!normalized) {
+        domainInput.value = row.domain;
+        return;
+      }
+      if (normalized === row.domain) {
+        domainInput.value = normalized;
+        return;
+      }
+      try {
+        await pgUpdate("trusted_sources", id, { domain: normalized });
+        row.domain = normalized;
+        domainInput.value = normalized;
+      } catch (err) {
+        if (handleAuthFailure(err)) return;
+        domainInput.value = row.domain;
+        domainInput.classList.add("has-error");
+        showRowError(errorEl, /duplicate|unique/i.test(err.message) ? "You already track this domain." : err.message);
+      }
+    });
+
+    // Deleting a source shows an explicit "Delete? Yes/No" warning inline
+    // rather than acting on the first click — auto-reverts to the plain ×
+    // after 5s if left alone, so a stray click can't silently remove a row.
+    const confirmWrap = tr.querySelector(".confirm-delete");
+    const yesBtn = tr.querySelector(".btn-confirm-yes");
+    const noBtn = tr.querySelector(".btn-confirm-no");
+    let revertTimer = null;
+
+    function showDeleteButton() {
+      clearTimeout(revertTimer);
+      confirmWrap.hidden = true;
+      deleteBtn.hidden = false;
+    }
+
+    deleteBtn.addEventListener("click", () => {
+      deleteBtn.hidden = true;
+      confirmWrap.hidden = false;
+      revertTimer = setTimeout(showDeleteButton, 5000);
+    });
+
+    noBtn.addEventListener("click", showDeleteButton);
+
+    yesBtn.addEventListener("click", async () => {
+      clearTimeout(revertTimer);
+      yesBtn.disabled = true;
+      noBtn.disabled = true;
+      try {
+        await pgDelete("trusted_sources", id);
+        loadSources();
+      } catch (err) {
+        if (handleAuthFailure(err)) return;
+        yesBtn.disabled = false;
+        noBtn.disabled = false;
+        showRowError(errorEl, err.message);
+        showDeleteButton();
+      }
+    });
+  });
+}
+
+function showRowError(el, message) {
+  el.hidden = false;
+  el.textContent = message;
+  setTimeout(() => { el.hidden = true; }, 4000);
+}
+
+document.getElementById("src-pagesize").addEventListener("change", () => { sourcesPage = 0; loadSources(); });
+let sourceFilterDebounce;
+document.getElementById("src-filter").addEventListener("input", () => {
+  clearTimeout(sourceFilterDebounce);
+  sourceFilterDebounce = setTimeout(() => { sourcesPage = 0; loadSources(); }, 350);
+});
+document.getElementById("sources-prev").addEventListener("click", () => { if (sourcesPage > 0) { sourcesPage--; loadSources(); } });
+document.getElementById("sources-next").addEventListener("click", () => {
+  if ((sourcesPage + 1) * sourcesPageSize() < sourcesTotal) { sourcesPage++; loadSources(); }
+});
+
+// New-domain trust picker — same steps/labels as the table's per-row picker
+// (and as extension/popup.js's own add-domain level picker). Priority
+// search is deliberately not offered here, matching the popup: a newly
+// added source is never pre-starred, only starred afterward from the table.
+let selectedNewScore = TRUST_SCALE_DEFAULT_SCORE[trustScaleMode];
+function renderNewSourceLevelPicker() {
+  selectedNewScore = TRUST_SCALE_DEFAULT_SCORE[trustScaleMode];
+  const container = document.getElementById("new-domain-level");
+  container.innerHTML = levelPickerHtml(selectedNewScore);
+  container.querySelectorAll(".level-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedNewScore = parseFloat(btn.dataset.score);
+      container.querySelectorAll(".level-btn").forEach((b) => b.classList.remove("is-active", "low", "medium", "high"));
+      btn.classList.add("is-active", trustBucket(selectedNewScore));
+    });
+  });
+}
+
+document.getElementById("add-source-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const statusEl = document.getElementById("sources-status");
+  statusEl.className = "status-msg";
+  const domain = normalizeDomain(document.getElementById("new-domain").value);
+  if (!domain) {
+    statusEl.className = "status-msg is-error";
+    statusEl.textContent = "Enter a valid domain.";
+    return;
+  }
+  try {
+    await pgInsert("trusted_sources", { user_id: currentUser().id, domain, trust_score: selectedNewScore });
+    document.getElementById("new-domain").value = "";
+    renderNewSourceLevelPicker();
+    sourcesPage = 0;
+    await loadSources();
+    statusEl.className = "status-msg is-ok";
+    statusEl.textContent = `Added ${domain}.`;
+  } catch (err) {
+    if (handleAuthFailure(err)) return;
+    statusEl.className = "status-msg is-error";
+    statusEl.textContent = /duplicate|unique/i.test(err.message) ? "You already track this domain — edit it below instead." : err.message;
+  }
+});
+
+// ---------- Initial load ----------
+renderNewSourceLevelPicker();
+updateTrustSortArrow();
+loadSearches();
+loadSources();
+</script>
+
+</body>
+</html>
