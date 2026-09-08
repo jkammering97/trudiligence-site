@@ -176,7 +176,7 @@
 <main class="legal">
   <div class="wrap">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 2026-08-29</p>
+    <p class="updated">Last updated: 2026-09-08</p>
 
     <p>
       according to is a Chrome extension that checks claims you select
@@ -201,8 +201,10 @@
     result.</strong> Each time you check a claim, we store the
     claim text, the resulting verdict, the confidence score, and a
     timestamp — plus, for every source used to reach that result, its
-    domain, your trust score for it, the LLM's supports / refutes /
-    unrelated judgment, the snippet text, and the source URL. This is
+    domain, your trust score for it, the LLM's judgment of how that source
+    relates to the claim (supports it, settles part of it, doesn't say
+    enough to tell, is off topic, or contradicts it), the snippet text, and
+    the source URL. This is
     what powers the Searches tab, including its "see sources" evidence
     view. We do not store the raw text you originally selected on the
     page — only the claim(s) extracted from it (see "How your data is
@@ -223,13 +225,35 @@
     <p><strong>Your own Anthropic API key, only if you choose the "bring
     your own key" (BYOK) plan.</strong> Stored encrypted at rest. Used to
     make Anthropic API calls on your behalf so that usage bills to your
-    own Anthropic account instead of ours.</p>
+    own Anthropic account instead of ours. If you're on the BYOK plan and
+    also choose GPT-5 mini as your model, you'll need to provide your own
+    OpenAI API key too, for the same reason — stored the same way
+    (encrypted at rest).</p>
+
+    <p><strong>Your AI model choice, if you change it.</strong> The Account
+    tab lets you pick Claude (the default) or GPT-5 mini for claim
+    extraction and stance classification. This preference is stored with
+    your account (see "How your data is processed" below for what picking
+    GPT-5 mini means for where your data goes).</p>
+
+    <p><strong>Internal quality-tuning logs.</strong> We log the input and
+    output of each search, stance-classification, and
+    contradiction-verification call, and the output only (never the input)
+    of each claim-extraction call, to a table only our own systems can
+    query — never exposed through the extension, an export, or any
+    user-facing feature — so we can inspect and improve the pipeline's
+    accuracy over time. This can in principle be correlated back to a
+    specific check, and therefore your account, since it's tied to the same
+    internal id as your search history. Claim extraction's input is
+    excluded specifically because it's the raw text you selected on a page,
+    for the same reason we don't store that as part of your search history
+    above.</p>
 
     <p><strong>On your device, via Chrome's <code>storage</code>
     API.</strong> Your sign-in session (access and refresh tokens, plus
     your user id/email), so you stay signed in between browser restarts;
-    two small display preferences (confidence-mode and trust-score
-    scale); and a short-lived cache of your most recent check
+    three small display preferences (confidence-mode, trust-score
+    scale, and light/dark theme); and a short-lived cache of your most recent check
     result, so reopening the popup shows it instantly. None of this
     leaves your device except your session token, which is sent to
     authenticate your own calls to our backend.</p>
@@ -251,7 +275,9 @@
 
     <ul>
       <li><strong>Claim extraction.</strong> The raw text you selected is
-      sent to Anthropic's Claude API to narrow it down to up to 3
+      sent to an AI provider — Anthropic's Claude API by default, or
+      <a href="https://openai.com" target="_blank" rel="noopener">OpenAI</a>'s
+      API if you've chosen GPT-5 mini on the Account tab — to narrow it down to up to 3
       specific, checkable claims, and to judge whether the text reads as
       a checkable factual claim at all (as opposed to an opinion or
       anecdote). This raw selection is not stored by us — only the
@@ -267,10 +293,15 @@
       we fall back to
       <a href="https://search.brave.com" target="_blank" rel="noopener">Brave Search</a>
       with the same claim text and locale.</li>
-      <li><strong>Stance classification.</strong> The claim text and each
-      retrieved result snippet are sent to Anthropic's Claude API, which
-      judges whether the snippet supports, refutes, or is unrelated to
-      the claim.</li>
+      <li><strong>Stance classification.</strong> The claim text and the
+      retrieved result snippets are sent together, in a single request, to
+      the same AI provider as claim extraction above (Anthropic or OpenAI,
+      by your model choice), which judges how each snippet relates to the
+      claim: whether it supports the claim, settles part of it, doesn't say
+      enough to tell, is off topic, or contradicts it. Where a snippet is
+      judged to contradict the claim, we send one further request to the
+      same provider asking whether the claim and that snippet could both be
+      true, before recording the result.</li>
       <li><strong>Billing.</strong> If you subscribe, checkout and
       payment happen entirely on
       <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>'s
@@ -279,25 +310,29 @@
     </ul>
 
     <p>If you're on the BYOK plan, claim extraction and stance
-    classification are billed to your own Anthropic account (using your
-    stored key) instead of ours; otherwise they run on our shared
-    Anthropic account. Anthropic's, Serper's, Brave's, and Stripe's
-    handling of the data sent to them is governed by their own
-    respective privacy policies, not this one.</p>
+    classification are billed to your own account with whichever provider
+    you've chosen (using your stored key) instead of ours; otherwise they
+    run on our shared Anthropic or OpenAI account, matching your model
+    choice. On the BYOK plan, choosing GPT-5 mini without first providing
+    your own OpenAI key doesn't bill usage to our account on your behalf —
+    it simply keeps using Claude via your Anthropic key until you add one.
+    Anthropic's, OpenAI's, Serper's, Brave's, and Stripe's handling of the
+    data sent to them is governed by their own respective privacy policies,
+    not this one.</p>
 
     <h2>Where your data is stored</h2>
 
     <p>Your email, trusted-domains list, search history (including
     per-source snippets and links), any feedback you've given,
     subscription/billing state, and — if
-    you're on the BYOK plan — your encrypted Anthropic API key are stored
+    you're on the BYOK plan — your encrypted Anthropic and/or OpenAI API key are stored
     in <a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a>,
     a third-party backend-as-a-service provider we use for our database
     and authentication. Row Level Security scopes every row to your own
     account, so only you (and, operationally, us as the service
     operator) can access your data — never other users.</p>
 
-    <p>Supabase, Anthropic, Serper, Brave, and Stripe all operate
+    <p>Supabase, Anthropic, OpenAI, Serper, Brave, and Stripe all operate
     infrastructure in the United States. Using according to means your
     data may be processed and stored outside your own country, including
     the US, regardless of where you are.</p>
@@ -308,8 +343,8 @@
       <li>All traffic between the extension, the web dashboard, our
       backend, and every third-party service above travels over
       HTTPS.</li>
-      <li>Your BYOK Anthropic API key, if you provide one, is encrypted
-      at rest (Fernet/AES) before it's stored, and only decrypted in
+      <li>Your BYOK Anthropic and/or OpenAI API key, if you provide one,
+      is encrypted at rest (Fernet/AES) before it's stored, and only decrypted in
       memory at the moment it's used to make an API call on your
       behalf.</li>
       <li>We never see or store your card details — Stripe's own hosted
