@@ -16,20 +16,33 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+  /* Values below are taken from the extension's own popup.css/content.css
+     token blocks so the site and the product read as one thing. Colour in
+     this brand is carried by three patterns borrowed from there: a solid
+     colour-filled icon square with a paper-coloured glyph (.fc-icon), a
+     callout box with a colour-matched left border (.fc-verdict), and a
+     tinted pill whose text is the full-strength colour (.bt-*-badge). */
   :root {
     --ink: #16171B;
+    --ink-hover: #2C2D31;
     --paper: #F4F1EA;
     --white: #FFFFFF;
+    --callout: #FBF8F0;
     --slot: #EFE47A;
+    --slot-hover: #E6D964;
     --bracket: #8A7A22;
     --link: #1F3FA8;
     --link-hover: #16307E;
     --sourced: #2F6B4F;
+    --sourced-tint: rgba(47, 107, 79, 0.12);
     --no-source: #B98A2E;
     --no-source-text: #8A6318;
+    --no-source-tint: rgba(185, 138, 46, 0.15);
     --contradicted: #C0392B;
     --contradicted-text: #A32E22;
+    --contradicted-tint: rgba(192, 57, 43, 0.12);
     --not-assessable: #8A8578;
+    --not-assessable-tint: rgba(138, 133, 120, 0.12);
     --body-text: #57544C;
     --meta: #8A8578;
     --hairline: #E2DDD0;
@@ -39,41 +52,53 @@
      (data-theme) overrides it either way — see assets/theme.js. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #ECE8DD;
-      --paper: #18191C;
-      --white: #212226;
+      --ink: #F4F1EA;
+      --ink-hover: #E4E0D3;
+      --paper: #16171B;
+      --white: #1F2025;
+      --callout: #24211A;
       --bracket: #D9C862;
-      --link: #7C93E8;
+      --link: #7C9CF0;
       --link-hover: #A9BEF2;
-      --sourced: #5FBE8F;
-      --no-source: #D9A748;
-      --no-source-text: #E0B458;
-      --contradicted: #E2776A;
-      --contradicted-text: #E2776A;
-      --not-assessable: #9C9888;
-      --body-text: #B8B4A8;
-      --meta: #9A968A;
-      --hairline: #2E2F34;
-      --hairline-soft: #26272B;
+      --sourced: #4FAE82;
+      --sourced-tint: rgba(79, 174, 130, 0.18);
+      --no-source: #D9A94A;
+      --no-source-text: #E4BE70;
+      --no-source-tint: rgba(217, 169, 74, 0.16);
+      --contradicted: #E2685C;
+      --contradicted-text: #EB897F;
+      --contradicted-tint: rgba(226, 104, 92, 0.16);
+      --not-assessable: #9C9686;
+      --not-assessable-tint: rgba(156, 150, 134, 0.16);
+      --body-text: #C9C4B8;
+      --meta: #9C9686;
+      --hairline: #35322A;
+      --hairline-soft: #2A2820;
     }
   }
   :root[data-theme="dark"] {
-    --ink: #ECE8DD;
-    --paper: #18191C;
-    --white: #212226;
+    --ink: #F4F1EA;
+    --ink-hover: #E4E0D3;
+    --paper: #16171B;
+    --white: #1F2025;
+    --callout: #24211A;
     --bracket: #D9C862;
-    --link: #7C93E8;
+    --link: #7C9CF0;
     --link-hover: #A9BEF2;
-    --sourced: #5FBE8F;
-    --no-source: #D9A748;
-    --no-source-text: #E0B458;
-    --contradicted: #E2776A;
-    --contradicted-text: #E2776A;
-    --not-assessable: #9C9888;
-    --body-text: #B8B4A8;
-    --meta: #9A968A;
-    --hairline: #2E2F34;
-    --hairline-soft: #26272B;
+    --sourced: #4FAE82;
+    --sourced-tint: rgba(79, 174, 130, 0.18);
+    --no-source: #D9A94A;
+    --no-source-text: #E4BE70;
+    --no-source-tint: rgba(217, 169, 74, 0.16);
+    --contradicted: #E2685C;
+    --contradicted-text: #EB897F;
+    --contradicted-tint: rgba(226, 104, 92, 0.16);
+    --not-assessable: #9C9686;
+    --not-assessable-tint: rgba(156, 150, 134, 0.16);
+    --body-text: #C9C4B8;
+    --meta: #9C9686;
+    --hairline: #35322A;
+    --hairline-soft: #2A2820;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -123,13 +148,13 @@
     font-weight: 700;
     font-size: 13px;
     text-decoration: none;
-    color: var(--paper);
-    background: var(--ink);
-    border: 1px solid var(--ink);
+    color: #16171B;
+    background: var(--slot);
+    border: 1px solid #16171B;
     border-radius: 6px;
     padding: 7px 14px;
   }
-  .nav-install:hover { color: var(--paper); opacity: 0.88; }
+  .nav-install:hover { color: #16171B; background: var(--slot-hover); }
   .nav-right { display: flex; align-items: center; gap: 8px; }
   .theme-toggle {
     width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
@@ -190,8 +215,15 @@
   .cta-row {
     display: flex;
     justify-content: center;
+    align-items: stretch;
     gap: 12px;
     flex-wrap: wrap;
+  }
+  .cta-row .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 26px;
+    font-size: 14px;
   }
   .btn {
     display: inline-block;
@@ -201,17 +233,24 @@
     font-size: 13px;
     text-decoration: none;
   }
+  /* The install action is the slot yellow everywhere it appears — the
+     brand's own logo colour, and the one thing on the page asking to be
+     pressed. Text and glyph on it are hardcoded ink rather than var(--ink):
+     the yellow does not change between light and dark, so a token that
+     flips to near-white would put white on yellow. Same reasoning as the
+     extension's `.fc-icon svg path { stroke: #F4F1EA }`. */
   .btn-primary {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--slot);
+    color: #16171B;
+    border: 1px solid #16171B;
   }
-  .btn-primary:hover { color: var(--paper); opacity: 0.88; }
+  .btn-primary:hover { color: #16171B; background: var(--slot-hover); }
   .btn-secondary {
     background: var(--white);
     color: var(--ink);
     border: 1px solid var(--hairline);
   }
-  .btn-secondary:hover { color: var(--ink); background: var(--paper); }
+  .btn-secondary:hover { color: var(--ink); background: var(--callout); }
   .btn-install {
     display: inline-flex;
     align-items: center;
@@ -234,8 +273,9 @@
     margin-top: 18px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
-    color: var(--meta);
-    border: 1px solid var(--hairline);
+    color: var(--bracket);
+    background: rgba(239, 228, 122, 0.32);
+    border: 1px solid rgba(239, 228, 122, 0.55);
     border-radius: 999px;
     padding: 5px 12px;
   }
@@ -321,12 +361,23 @@
   }
   .flow li {
     position: relative;
-    background: var(--white);
+    background: var(--callout);
     border: 1px solid var(--hairline);
+    border-left: 3px solid var(--meta);
     border-radius: 10px;
     padding: 18px 16px;
     text-align: center;
   }
+  /* One colour per step, each picked for a reason rather than for variety:
+     the highlighter yellow for the step where you highlight something, the
+     citation blue for the step that goes and finds sources, ink for the
+     model (ink is this brand's "active/primary" role), and the sourced
+     green for the step that produces the verdict. Nothing here invents a
+     colour the extension doesn't already use. */
+  .flow li:nth-child(1) { border-left-color: var(--bracket); }
+  .flow li:nth-child(2) { border-left-color: var(--link); }
+  .flow li:nth-child(3) { border-left-color: var(--ink); }
+  .flow li:nth-child(4) { border-left-color: var(--sourced); }
   /* Arrows sit in the grid gap, so they never affect card sizing. */
   .flow li:not(:last-child)::after {
     content: "";
@@ -340,18 +391,23 @@
     border-bottom: 5.5px solid transparent;
     transform: translateY(-50%);
   }
+  /* Solid colour-filled square with the glyph knocked out of it — the
+     extension's `.fc-icon` pattern, glyph inheriting via currentColor. */
   .flow-icon {
     width: 40px;
     height: 40px;
     margin: 0 auto 12px;
     border-radius: 9px;
-    background: var(--paper);
-    border: 1px solid var(--hairline-soft);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ink);
   }
+  .flow li:nth-child(1) .flow-icon { background: var(--slot); color: #16171B; }
+  .flow li:nth-child(2) .flow-icon { background: var(--link); color: #F4F1EA; }
+  /* Both sides tokenised, so this pair inverts together in dark mode the
+     way the extension's primary button does, instead of going low-contrast. */
+  .flow li:nth-child(3) .flow-icon { background: var(--ink); color: var(--paper); }
+  .flow li:nth-child(4) .flow-icon { background: var(--sourced); color: #F4F1EA; }
   .flow-icon svg { width: 21px; height: 21px; }
   .flow-step {
     font-family: 'IBM Plex Mono', monospace;
@@ -418,7 +474,7 @@
     width: 26px;
     height: 26px;
     border-radius: 6px;
-    background: var(--white);
+    background: var(--callout);
     border: 1px solid var(--hairline);
     color: var(--ink);
     font-family: 'IBM Plex Mono', monospace;
@@ -481,23 +537,27 @@
   }
   .verdicts .row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 10px;
   }
-  .verdicts .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 5px;
+  /* Tinted pill, full-strength colour for the text — the extension's own
+     `.bt-source-trust-badge` / `.bt-level.is-active` treatment. The four
+     verdicts are the one place this brand spends colour on meaning, so
+     they are the one place the site should look like the product. */
+  .verdicts .pill {
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.35;
+    padding: 3px 10px;
+    border-radius: 999px;
     flex-shrink: 0;
-    position: relative;
-    top: -1px;
+    white-space: nowrap;
   }
-  .verdicts b { font-weight: 700; }
   .verdicts .desc { color: var(--meta); }
-  .dot-sourced { background: var(--sourced); }
-  .dot-no-source { background: var(--no-source); }
-  .dot-contradicted { background: var(--contradicted); }
-  .dot-not-assessable { background: var(--not-assessable); }
+  .pill-sourced { background: var(--sourced-tint); color: var(--sourced); }
+  .pill-no-source { background: var(--no-source-tint); color: var(--no-source-text); }
+  .pill-contradicted { background: var(--contradicted-tint); color: var(--contradicted-text); }
+  .pill-not-assessable { background: var(--not-assessable-tint); color: var(--meta); }
 
   /* ---- Pricing ---- */
   .plans {
@@ -654,7 +714,7 @@
     <ol class="flow">
       <li>
         <div class="flow-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="14" height="6" rx="1.5" fill="#EFE47A" stroke="none"/><path d="M2.5 7h14M2.5 13h14" stroke="currentColor"/><path d="M13 14.5l7 7M13 14.5v5.5M13 14.5h5.5" /></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="14" height="6" rx="1.5" fill="currentColor" opacity="0.22" stroke="none"/><path d="M2.5 7h14M2.5 13h14" stroke="currentColor"/><path d="M13 14.5l7 7M13 14.5v5.5M13 14.5h5.5" /></svg>
         </div>
         <div class="flow-step">STEP 1</div>
         <div class="flow-title">Select a claim</div>
@@ -665,7 +725,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
         </div>
         <div class="flow-step">STEP 2</div>
-        <div class="flow-title">We search the web for it</div>
+        <div class="flow-title">We search the web for&nbsp;it</div>
         <div class="flow-sub">A real search, run separately from the AI — not the model's memory.</div>
       </li>
       <li>
@@ -741,10 +801,10 @@
         <div class="title">Never "true" or "false"</div>
         <div class="body">
           <div class="verdicts">
-            <div class="row"><span class="dot dot-sourced"></span><b>sourced</b><span class="desc">— traced to a primary document</span></div>
-            <div class="row"><span class="dot dot-no-source"></span><b>no source found</b><span class="desc">— claim stands alone</span></div>
-            <div class="row"><span class="dot dot-contradicted"></span><b>contradicted</b><span class="desc">— primary sources disagree</span></div>
-            <div class="row"><span class="dot dot-not-assessable"></span><b>not assessable</b><span class="desc">— opinion or anecdote, not a checkable claim</span></div>
+            <div class="row"><span class="pill pill-sourced">sourced</span><span class="desc">— traced to a primary document</span></div>
+            <div class="row"><span class="pill pill-no-source">no source found</span><span class="desc">— claim stands alone</span></div>
+            <div class="row"><span class="pill pill-contradicted">contradicted</span><span class="desc">— primary sources disagree</span></div>
+            <div class="row"><span class="pill pill-not-assessable">not assessable</span><span class="desc">— opinion or anecdote, not a checkable claim</span></div>
           </div>
         </div>
       </div>
