@@ -13,10 +13,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+  /* Same values as the extension's popup.css/content.css token blocks, so
+     this page's dark mode matches the product and index.html rather than
+     being a cooler grey of its own. A legal page should stay quiet, so the
+     colour here is limited to the callout ground and the slot yellow on
+     the "last updated" stamp — no verdict colours, since there are no
+     verdicts on this page to mean anything by them. */
   :root {
     --ink: #16171B;
     --paper: #F4F1EA;
     --white: #FFFFFF;
+    --callout: #FBF8F0;
+    --slot: #EFE47A;
+    --bracket: #8A7A22;
     --link: #1F3FA8;
     --link-hover: #16307E;
     --body-text: #57544C;
@@ -26,27 +35,33 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #ECE8DD;
-      --paper: #18191C;
-      --white: #212226;
-      --link: #7C93E8;
+      --ink: #F4F1EA;
+      --paper: #16171B;
+      --white: #1F2025;
+      --callout: #24211A;
+      --slot: #EFE47A;
+      --bracket: #D9C862;
+      --link: #7C9CF0;
       --link-hover: #A9BEF2;
-      --body-text: #B8B4A8;
-      --meta: #9A968A;
-      --hairline: #2E2F34;
-      --hairline-soft: #26272B;
+      --body-text: #C9C4B8;
+      --meta: #9C9686;
+      --hairline: #35322A;
+      --hairline-soft: #2A2820;
     }
   }
   :root[data-theme="dark"] {
-    --ink: #ECE8DD;
-    --paper: #18191C;
-    --white: #212226;
-    --link: #7C93E8;
+    --ink: #F4F1EA;
+    --paper: #16171B;
+    --white: #1F2025;
+    --callout: #24211A;
+    --slot: #EFE47A;
+    --bracket: #D9C862;
+    --link: #7C9CF0;
     --link-hover: #A9BEF2;
-    --body-text: #B8B4A8;
-    --meta: #9A968A;
-    --hairline: #2E2F34;
-    --hairline-soft: #26272B;
+    --body-text: #C9C4B8;
+    --meta: #9C9686;
+    --hairline: #35322A;
+    --hairline-soft: #2A2820;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -118,10 +133,24 @@
     margin: 0 0 4px;
   }
   .updated {
+    display: inline-block;
     font-family: 'IBM Plex Mono', monospace;
-    color: var(--meta);
+    color: var(--bracket);
+    background: rgba(239, 228, 122, 0.32);
+    border: 1px solid rgba(239, 228, 122, 0.55);
+    border-radius: 999px;
+    padding: 4px 11px;
     font-size: 12px;
     margin-bottom: 36px;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: var(--callout);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--ink);
   }
   main.legal h2 {
     font-family: 'Newsreader', serif;
