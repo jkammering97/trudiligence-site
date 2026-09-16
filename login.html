@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<!-- GitHub Pages can't set response headers, so the policy has to ride in a
+     meta tag. It is worth having even with 'unsafe-inline' (every script on
+     these pages is inline): it stops an injected script from *loading* or
+     *reaching* anywhere we don't already talk to, which is the step that
+     turns an XSS into stolen session tokens — and this site keeps Supabase
+     access and refresh tokens in localStorage. frame-ancestors is omitted
+     deliberately: it is ignored in a meta tag and would only mislead. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
@@ -231,7 +240,22 @@
   }
 
   const params = new URLSearchParams(window.location.search);
-  const redirectTo = params.get("next") && params.get("next").startsWith("/") ? params.get("next") : "app.html";
+
+  /** `?next=` may only be a same-site absolute path.
+   *
+   * The previous check was `startsWith("/")`, which "//evil.com" passes —
+   * browsers read that as a protocol-relative URL and navigate off-site.
+   * On a sign-in page that is a ready-made phishing step: the victim signs
+   * in on the real site, sees it work, and is handed to the attacker's
+   * page still believing they are with us. Requiring the second character
+   * to be neither "/" nor "\\" closes it (Chrome normalises a backslash
+   * to a slash here, so "/\\evil.com" would escape too). */
+  function safeNext(raw) {
+    if (!raw) return "app.html";
+    if (raw === "/") return raw;
+    return /^\/[^/\\]/.test(raw) ? raw : "app.html";
+  }
+  const redirectTo = safeNext(params.get("next"));
 
   const panels = {
     credentials: document.getElementById("panel-credentials"),

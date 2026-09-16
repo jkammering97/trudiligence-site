@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<!-- GitHub Pages can't set response headers, so the policy has to ride in a
+     meta tag. It is worth having even with 'unsafe-inline' (every script on
+     these pages is inline): it stops an injected script from *loading* or
+     *reaching* anywhere we don't already talk to, which is the step that
+     turns an XSS into stolen session tokens — and this site keeps Supabase
+     access and refresh tokens in localStorage. frame-ancestors is omitted
+     deliberately: it is ignored in a meta tag and would only mislead. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>according to […] — evidence you can inspect</title>
@@ -47,6 +56,7 @@
     --meta: #8A8578;
     --hairline: #E2DDD0;
     --hairline-soft: #EDE9DD;
+    --shadow: rgba(22, 23, 27, 0.22);
   }
   /* Dark palette follows the system setting by default; an explicit toggle
      (data-theme) overrides it either way — see assets/theme.js. */
@@ -74,6 +84,7 @@
       --meta: #9C9686;
       --hairline: #35322A;
       --hairline-soft: #2A2820;
+      --shadow: rgba(0, 0, 0, 0.5);
     }
   }
   :root[data-theme="dark"] {
@@ -99,6 +110,7 @@
     --meta: #9C9686;
     --hairline: #35322A;
     --hairline-soft: #2A2820;
+    --shadow: rgba(0, 0, 0, 0.5);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -499,6 +511,33 @@
     color: var(--meta);
     margin: 40px 0 18px;
   }
+  /* The prose and the thing it describes, side by side — the screenshot is
+     a real check, not a mockup, so it carries more than any diagram can. */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+    align-items: start;
+  }
+  .shot { margin: 0; }
+  .shot img {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--hairline);
+    box-shadow: 0 12px 34px var(--shadow);
+  }
+  .shot figcaption {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--meta);
+    margin-top: 12px;
+  }
+  @media (max-width: 860px) {
+    .detail-grid { grid-template-columns: 1fr; gap: 32px; }
+    .shot img { max-width: 340px; margin: 0 auto; }
+    .shot figcaption { max-width: 340px; margin-left: auto; margin-right: auto; }
+  }
 
   .principles {
     display: grid;
@@ -509,6 +548,29 @@
     border-radius: 8px;
     padding: 18px 20px;
     background: var(--white);
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  /* Same shape as the flow-diagram icons and the extension's own verdict
+     icon: a colour-filled square with the glyph knocked out of it. */
+  .principle-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .principle-icon svg { width: 18px; height: 18px; }
+  .principle:nth-child(1) .principle-icon { background: var(--ink); color: var(--paper); }
+  .principle:nth-child(2) .principle-icon { background: var(--slot); color: #16171B; }
+  .principle:nth-child(3) .principle-icon { background: var(--contradicted); color: #F4F1EA; }
+  .principle:nth-child(4) .principle-icon { background: var(--sourced); color: #F4F1EA; }
+  @media (max-width: 460px) {
+    .principle { flex-direction: column; gap: 12px; }
   }
   .principle .title {
     font-weight: 700;
@@ -545,14 +607,20 @@
      verdicts are the one place this brand spends colour on meaning, so
      they are the one place the site should look like the product. */
   .verdicts .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-weight: 700;
     font-size: 12.5px;
     line-height: 1.35;
-    padding: 3px 10px;
+    padding: 3px 10px 3px 8px;
     border-radius: 999px;
     flex-shrink: 0;
     white-space: nowrap;
   }
+  /* The four glyphs are the extension's own (content.js's CHECK/WARN/X/DASH
+     paths), stroked in the pill's text colour rather than redrawn. */
+  .verdicts .pill svg { width: 13px; height: 13px; flex-shrink: 0; }
   .verdicts .desc { color: var(--meta); }
   .pill-sourced { background: var(--sourced-tint); color: var(--sourced); }
   .pill-no-source { background: var(--no-source-tint); color: var(--no-source-text); }
@@ -809,8 +877,9 @@
       </li>
     </ol>
   </div>
-  <div class="wrap">
+  <div class="wrap-wide">
     <div class="detail-head">IN MORE DETAIL</div>
+    <div class="detail-grid">
     <ol class="steps">
       <li>
         <div class="num">1</div>
@@ -841,6 +910,16 @@
         </div>
       </li>
     </ol>
+    <figure class="shot">
+      <img src="assets/img/result-card.png" width="360" height="612" loading="lazy" decoding="async"
+           alt="The according to result card: a green “sourced” verdict reading “4 of 5 sources, including nytimes.com (high trust) support this claim”, a 67% confidence bar, and five sources listed underneath — nytimes.com and archive.nytimes.com marked high trust, reddit.com low, youtube.com and space.com unrated — each with the quoted sentence it was judged on." />
+      <figcaption>
+        A real check, not a mockup: the verdict, how much of it the sources
+        actually carry, and every source with your own trust rating and the
+        sentence it was judged on.
+      </figcaption>
+    </figure>
+    </div>
   </div>
 </section>
 
@@ -849,26 +928,38 @@
     <h2>Built to be inspected, not just trusted</h2>
     <div class="principles">
       <div class="principle">
+        <div class="principle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h9l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M13.5 4v5.5H19"/><circle cx="11" cy="14" r="2.6"/><path d="M12.9 15.9L15 18"/></svg></div>
+        <div>
         <div class="title">The model never answers from memory</div>
         <div class="body">Every result is grounded in retrieved evidence you can see — the model is only ever asked to judge whether a specific snippet supports or refutes a claim, never to recall the answer itself. It also judges each source only on that source's own words, never borrowing another one's wording as evidence.</div>
+        </div>
       </div>
       <div class="principle">
+        <div class="principle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg></div>
+        <div>
         <div class="title">You decide who to trust</div>
         <div class="body">Rate domains on your own scale — a source's weight in the result comes from your trust list, not a fixed opinion baked into the extension. Rating a publisher covers its subdomains too, so rating <code>nytimes.com</code> also covers <code>well.blogs.nytimes.com</code> — but never a lookalike domain that merely contains the name.</div>
+        </div>
       </div>
       <div class="principle">
+        <div class="principle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.2V9h-4.8"/></svg></div>
+        <div>
         <div class="title">Contradictions get a second look</div>
         <div class="body">Calling a source contradictory is the easiest mistake to make and the most damaging one, so it isn't taken on the first pass. Anything flagged as contradicting a claim is re-checked with a second, narrower question — could the claim and this source both be true? — before it's allowed to count.</div>
+        </div>
       </div>
       <div class="principle">
+        <div class="principle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M5 8h14"/><path d="M5 8l-2.5 5h5z"/><path d="M19 8l-2.5 5h5z"/><path d="M8.5 20h7"/></svg></div>
+        <div>
         <div class="title">Never "true" or "false"</div>
         <div class="body">
           <div class="verdicts">
-            <div class="row"><span class="pill pill-sourced">sourced</span><span class="desc">— traced to a primary document</span></div>
-            <div class="row"><span class="pill pill-no-source">no source found</span><span class="desc">— claim stands alone</span></div>
-            <div class="row"><span class="pill pill-contradicted">contradicted</span><span class="desc">— primary sources disagree</span></div>
-            <div class="row"><span class="pill pill-not-assessable">not assessable</span><span class="desc">— opinion or anecdote, not a checkable claim</span></div>
+            <div class="row"><span class="pill pill-sourced"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 52 L44 68 L74 34"/></svg>sourced</span><span class="desc">— traced to a primary document</span></div>
+            <div class="row"><span class="pill pill-no-source"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M50 22 L50 60 M50 76 L50 80"/></svg>no source found</span><span class="desc">— claim stands alone</span></div>
+            <div class="row"><span class="pill pill-contradicted"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 30 L70 70 M70 30 L30 70"/></svg>contradicted</span><span class="desc">— primary sources disagree</span></div>
+            <div class="row"><span class="pill pill-not-assessable"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 50 L72 50"/></svg>not assessable</span><span class="desc">— opinion or anecdote, not a checkable claim</span></div>
           </div>
+        </div>
         </div>
       </div>
     </div>
