@@ -5,10 +5,13 @@
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>according to […] — evidence you can inspect</title>
-<meta name="description" content="according to is a Chrome extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim." />
+<meta name="description" content="according to is a browser extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim. Free for 25 checks a month. For Chrome, Edge, Brave, Opera, Vivaldi and Arc." />
+<link rel="canonical" href="https://accordingto.app/" />
 <meta property="og:title" content="according to […] — evidence you can inspect" />
-<meta property="og:description" content="A Chrome extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim." />
+<meta property="og:description" content="A browser extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://accordingto.app/" />
+<meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -83,6 +86,8 @@
   a { color: var(--link); }
   a:hover { color: var(--link-hover); }
   .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  /* The flow diagram needs more horizontal room than the reading column. */
+  .wrap-wide { max-width: 940px; margin: 0 auto; padding: 0 24px; }
 
   header.top {
     background: var(--white);
@@ -113,6 +118,18 @@
     background: var(--white);
   }
   .nav-account:hover { background: var(--paper); }
+  .nav-install {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 6px;
+    padding: 7px 14px;
+  }
+  .nav-install:hover { color: var(--paper); opacity: 0.88; }
   .nav-right { display: flex; align-items: center; gap: 8px; }
   .theme-toggle {
     width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
@@ -188,11 +205,30 @@
     background: var(--ink);
     color: var(--paper);
   }
+  .btn-primary:hover { color: var(--paper); opacity: 0.88; }
   .btn-secondary {
     background: var(--white);
     color: var(--ink);
     border: 1px solid var(--hairline);
   }
+  .btn-secondary:hover { color: var(--ink); background: var(--paper); }
+  .btn-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 26px;
+    font-size: 14px;
+  }
+  .btn-install svg { width: 17px; height: 17px; flex-shrink: 0; }
+  /* The button says "Chrome" because that is the store it installs from;
+     this line is what actually tells an Edge/Brave/Arc user it is for them. */
+  .cta-compat {
+    font-size: 13px;
+    color: var(--body-text);
+    margin: 14px auto 0;
+    max-width: 440px;
+  }
+  .cta-compat b { font-weight: 600; color: var(--ink); }
   .badge {
     display: inline-block;
     margin-top: 18px;
@@ -213,6 +249,156 @@
     font-weight: 500;
     font-size: 22px;
     margin: 0 0 22px;
+  }
+  .section-intro {
+    color: var(--body-text);
+    font-size: 14.5px;
+    margin: -12px 0 24px;
+  }
+
+  /* ---- Demo video: click-to-load, so nothing is requested from YouTube
+     until the visitor actually asks for the video. ---- */
+  .video-shell {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .video-shell iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-facade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--ink);
+    border: 0;
+    cursor: pointer;
+    font-family: 'Public Sans', sans-serif;
+    padding: 24px;
+  }
+  .video-facade:hover .video-play { transform: scale(1.06); }
+  .video-play {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: var(--slot);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+  .video-play svg { width: 22px; height: 22px; margin-left: 3px; }
+  .video-facade .label {
+    font-weight: 700;
+    font-size: 15px;
+    color: #F4F1EA;
+  }
+  .video-facade .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #A9A496;
+  }
+  .video-note {
+    font-size: 12.5px;
+    color: var(--meta);
+    margin: 12px 0 0;
+  }
+
+  /* ---- Flow diagram (from workflow.pptx) ---- */
+  .flow {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 34px;
+  }
+  .flow li {
+    position: relative;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  /* Arrows sit in the grid gap, so they never affect card sizing. */
+  .flow li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -22px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid var(--meta);
+    border-top: 5.5px solid transparent;
+    border-bottom: 5.5px solid transparent;
+    transform: translateY(-50%);
+  }
+  .flow-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 12px;
+    border-radius: 9px;
+    background: var(--paper);
+    border: 1px solid var(--hairline-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+  }
+  .flow-icon svg { width: 21px; height: 21px; }
+  .flow-step {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--meta);
+    margin-bottom: 5px;
+  }
+  .flow-title {
+    font-family: 'Newsreader', serif;
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+  .flow-sub {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--body-text);
+  }
+  @media (max-width: 860px) {
+    .flow { grid-template-columns: repeat(2, 1fr); gap: 34px; }
+    /* In two columns, items 1 and 3 point right; 2 points down to 3. */
+    .flow li:nth-child(2)::after {
+      top: auto;
+      right: 50%;
+      bottom: -20px;
+      transform: translateX(50%);
+      border-left: 5.5px solid transparent;
+      border-right: 5.5px solid transparent;
+      border-top: 7px solid var(--meta);
+      border-bottom: 0;
+    }
+  }
+  @media (max-width: 560px) {
+    .flow { grid-template-columns: 1fr; gap: 34px; }
+    .flow li:not(:last-child)::after,
+    .flow li:nth-child(2)::after {
+      top: auto;
+      right: 50%;
+      bottom: -20px;
+      transform: translateX(50%);
+      border-left: 5.5px solid transparent;
+      border-right: 5.5px solid transparent;
+      border-top: 7px solid var(--meta);
+      border-bottom: 0;
+    }
   }
 
   .steps {
@@ -250,6 +436,13 @@
     color: var(--body-text);
     font-size: 14.5px;
   }
+  .detail-head {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--meta);
+    margin: 40px 0 18px;
+  }
 
   .principles {
     display: grid;
@@ -269,6 +462,15 @@
   .principle .body {
     color: var(--body-text);
     font-size: 14.5px;
+  }
+  .principle code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: var(--paper);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--ink);
   }
 
   .verdicts {
@@ -297,6 +499,67 @@
   .dot-contradicted { background: var(--contradicted); }
   .dot-not-assessable { background: var(--not-assessable); }
 
+  /* ---- Pricing ---- */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .plan {
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 20px;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+  }
+  .plan-name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .plan-price {
+    font-family: 'Newsreader', serif;
+    font-size: 27px;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .plan-per {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--meta);
+    margin-top: 4px;
+  }
+  .plan-alt {
+    font-size: 12.5px;
+    color: var(--body-text);
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--hairline-soft);
+  }
+  .plan-body {
+    font-size: 13.5px;
+    color: var(--body-text);
+    margin-top: 12px;
+  }
+  .plan-quota {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--meta);
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline-soft);
+  }
+  .plan-body { margin-bottom: 14px; }
+  .plans-note {
+    font-size: 13px;
+    color: var(--meta);
+    margin: 20px 0 0;
+  }
+  @media (max-width: 680px) {
+    .plans { grid-template-columns: 1fr; }
+  }
+
   footer {
     padding: 32px 0 48px;
     border-top: 1px solid var(--hairline-soft);
@@ -312,6 +575,7 @@
   @media (max-width: 520px) {
     h1 { font-size: 30px; }
     main.hero { padding: 52px 0 40px; }
+    .nav-install { display: none; }
   }
 </style>
 </head>
@@ -330,6 +594,7 @@
     </div>
     <div class="nav-right">
       <button type="button" id="theme-toggle" class="theme-toggle"></button>
+      <a class="nav-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">Add to Chrome</a>
       <a id="nav-account-link" class="nav-account" href="login.html">Sign in</a>
     </div>
   </div>
@@ -337,7 +602,7 @@
 
 <main class="hero">
   <div class="wrap">
-    <div class="eyebrow">Chrome Extension</div>
+    <div class="eyebrow">NOW ON THE CHROME WEB STORE</div>
     <h1>Check claims on any page,<br />right where you read them.</h1>
     <p class="lede">
       Highlight a claim, right-click, and according to searches for real
@@ -346,16 +611,83 @@
       by an LLM's own opinion.
     </p>
     <div class="cta-row">
-      <a class="btn btn-primary" href="mailto:jonathan.kammering@gmail.com">Get in touch</a>
-      <a class="btn btn-secondary" href="#how-it-works">See how it works</a>
+      <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome
+      </a>
+      <a class="btn btn-secondary" href="#demo">Watch the demo</a>
     </div>
-    <div class="badge">Coming soon to the Chrome Web Store</div>
+    <p class="cta-compat">
+      Installs from the Chrome Web Store — and works the same in
+      <b>Edge</b>, <b>Brave</b>, <b>Opera</b>, <b>Vivaldi</b> and
+      <b>Arc</b>, or any other Chromium browser.
+    </p>
+    <div class="badge">Free for 25 fact-checks a month · no card needed</div>
   </div>
 </main>
 
-<section id="how-it-works">
+<section id="demo">
   <div class="wrap">
+    <h2>See it work</h2>
+    <p class="section-intro">
+      One selection, one right-click, and the sources behind the claim —
+      start to finish.
+    </p>
+    <div class="video-shell">
+      <button type="button" class="video-facade" id="demo-play" aria-label="Play the according to demo video">
+        <span class="video-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z" fill="#16171B"/></svg>
+        </span>
+        <span class="label">Watch the demo</span>
+        <span class="sub">fact-checking a claim, end to end</span>
+      </button>
+    </div>
+    <p class="video-note">
+      Nothing is requested from YouTube until you press play.
+    </p>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <div class="wrap-wide">
     <h2>How it works</h2>
+    <ol class="flow">
+      <li>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="14" height="6" rx="1.5" fill="#EFE47A" stroke="none"/><path d="M2.5 7h14M2.5 13h14" stroke="currentColor"/><path d="M13 14.5l7 7M13 14.5v5.5M13 14.5h5.5" /></svg>
+        </div>
+        <div class="flow-step">STEP 1</div>
+        <div class="flow-title">Select a claim</div>
+        <div class="flow-sub">Highlight the sentence, right-click, choose “Fact-check selection.”</div>
+      </li>
+      <li>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+        </div>
+        <div class="flow-step">STEP 2</div>
+        <div class="flow-title">We search the web for it</div>
+        <div class="flow-sub">A real search, run separately from the AI — not the model's memory.</div>
+      </li>
+      <li>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M5 8h14"/><path d="M5 8l-2.5 5h5z"/><path d="M19 8l-2.5 5h5z"/><path d="M8.5 20h7"/></svg>
+        </div>
+        <div class="flow-step">STEP 3</div>
+        <div class="flow-title">AI checks what sources actually say</div>
+        <div class="flow-sub">Each result is judged on its own words — never asked to answer the claim itself.</div>
+      </li>
+      <li>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 11h13M4 16h7"/><circle cx="18" cy="17.5" r="4" fill="#EFE47A" stroke="none"/><path d="M16.3 17.6l1.3 1.3 2.4-2.6" stroke="#16171B"/></svg>
+        </div>
+        <div class="flow-step">STEP 4</div>
+        <div class="flow-title">You see the evidence — not just a verdict</div>
+        <div class="flow-sub">Every source listed and rated, so you can check the check.</div>
+      </li>
+    </ol>
+  </div>
+  <div class="wrap">
+    <div class="detail-head">IN MORE DETAIL</div>
     <ol class="steps">
       <li>
         <div class="num">1</div>
@@ -368,21 +700,21 @@
         <div class="num">2</div>
         <div>
           <div class="step-title">Claims are narrowed down for you</div>
-          <div class="step-body">Up to three specific, checkable claims are pulled out of the selection and shown to you — editable — before anything else happens.</div>
+          <div class="step-body">Up to three specific, checkable claims are pulled out of the selection and shown to you — editable — before anything else happens. If what you selected reads as an opinion or an anecdote rather than a checkable claim, it's marked "not assessable" and no search runs at all.</div>
         </div>
       </li>
       <li>
         <div class="num">3</div>
         <div>
           <div class="step-title">Real sources get searched</div>
-          <div class="step-body">A live search runs for each claim against real search results — no static knowledge, no guessing.</div>
+          <div class="step-body">A live web search runs for each claim — no static knowledge, no guessing. Up to five sources are kept, chosen by how much of the claim's own specific wording each one actually covers, rather than by whichever link happened to rank first. Domains you've rated keep their place ahead of general results.</div>
         </div>
       </li>
       <li>
         <div class="num">4</div>
         <div>
           <div class="step-title">See the evidence, not just a verdict</div>
-          <div class="step-body">Each source is weighed by your own trust rating and whether it actually supports or refutes the claim, combined into one plain-language result — with every source listed right there.</div>
+          <div class="step-body">Each source is weighed by your own trust rating and by whether its text actually supports or refutes the claim, combined into one plain-language result — with every source listed right there, and a confidence bar you can read at a glance.</div>
         </div>
       </li>
     </ol>
@@ -395,11 +727,15 @@
     <div class="principles">
       <div class="principle">
         <div class="title">The model never answers from memory</div>
-        <div class="body">Every result is grounded in retrieved evidence you can see — the model is only ever asked to judge whether a specific snippet supports or refutes a claim, never to recall the answer itself.</div>
+        <div class="body">Every result is grounded in retrieved evidence you can see — the model is only ever asked to judge whether a specific snippet supports or refutes a claim, never to recall the answer itself. It also judges each source only on that source's own words, never borrowing another one's wording as evidence.</div>
       </div>
       <div class="principle">
         <div class="title">You decide who to trust</div>
-        <div class="body">Rate domains on your own scale — a source's weight in the result comes from your trust list, not a fixed opinion baked into the extension.</div>
+        <div class="body">Rate domains on your own scale — a source's weight in the result comes from your trust list, not a fixed opinion baked into the extension. Rating a publisher covers its subdomains too, so rating <code>nytimes.com</code> also covers <code>well.blogs.nytimes.com</code> — but never a lookalike domain that merely contains the name.</div>
+      </div>
+      <div class="principle">
+        <div class="title">Contradictions get a second look</div>
+        <div class="body">Calling a source contradictory is the easiest mistake to make and the most damaging one, so it isn't taken on the first pass. Anything flagged as contradicting a claim is re-checked with a second, narrower question — could the claim and this source both be true? — before it's allowed to count.</div>
       </div>
       <div class="principle">
         <div class="title">Never "true" or "false"</div>
@@ -416,10 +752,53 @@
   </div>
 </section>
 
+<section id="pricing">
+  <div class="wrap">
+    <h2>Pricing</h2>
+    <p class="section-intro">
+      Start free, no card. Plans are chosen inside the extension, on the
+      Account tab.
+    </p>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">€0</div>
+        <div class="plan-per">FOREVER</div>
+        <div class="plan-body">Every feature of the extension — the trust list, the source lists, the dashboard. Just fewer checks.</div>
+        <div class="plan-quota">25 FACT-CHECKS / MONTH</div>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Regular</div>
+        <div class="plan-price">€7.99</div>
+        <div class="plan-per">PER MONTH, VAT INCLUDED</div>
+        <div class="plan-alt">or €64.99 a year</div>
+        <div class="plan-body">Checks run on our AI key — nothing to set up, nothing else to pay for.</div>
+        <div class="plan-quota">250 FACT-CHECKS / MONTH</div>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Bring your own key</div>
+        <div class="plan-price">€3.99</div>
+        <div class="plan-per">PER MONTH, VAT INCLUDED</div>
+        <div class="plan-alt">or €34.99 a year</div>
+        <div class="plan-body">About half the price, because you supply your own Anthropic API key and the model usage bills to you, not to us.</div>
+        <div class="plan-quota">250 FACT-CHECKS / MONTH</div>
+      </div>
+    </div>
+    <p class="plans-note">
+      One plan at a time — Regular and bring-your-own-key are alternatives,
+      not add-ons. Switch or cancel whenever you like from the extension's
+      Account tab, which opens Stripe's own billing portal; we never see
+      your card details.
+    </p>
+  </div>
+</section>
+
 <footer>
   <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
     <span>© 2026 according to</span>
     <span>
+      <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">Chrome Web Store</a>
+      &nbsp;·&nbsp;
       <a href="privacy.html">Privacy</a>
       &nbsp;·&nbsp;
       <a href="mailto:jonathan.kammering@gmail.com">jonathan.kammering@gmail.com</a>
@@ -436,6 +815,25 @@
     link.href = "app.html";
   }
   initThemeToggle(document.getElementById("theme-toggle"));
+</script>
+
+<script>
+  // Click-to-load the demo: no YouTube request happens on page load, only
+  // once the visitor presses play. youtube-nocookie keeps it cookie-free.
+  // Deliberately not in the module above — a failed import there must not
+  // be able to take the play button down with it.
+  (function () {
+    var facade = document.getElementById("demo-play");
+    if (!facade) return;
+    facade.addEventListener("click", function () {
+      var frame = document.createElement("iframe");
+      frame.src = "https://www.youtube-nocookie.com/embed/osu_H57XGz0?autoplay=1&rel=0";
+      frame.title = "according to \u2014 demo";
+      frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      frame.allowFullscreen = true;
+      facade.replaceWith(frame);
+    });
+  })();
 </script>
 
 </body>
