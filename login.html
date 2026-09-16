@@ -276,6 +276,11 @@
   tabSignin.addEventListener("click", () => setMode("signin"));
   tabSignup.addEventListener("click", () => setMode("signup"));
 
+  // ?mode=signup lands straight on the create-account tab, so the pricing
+  // section's "Create account" buttons don't drop people on a sign-in form
+  // they then have to notice a tab above.
+  if (params.get("mode") === "signup") setMode("signup");
+
   document.getElementById("email").value = getRememberedEmail();
 
   document.getElementById("form-credentials").addEventListener("submit", async (e) => {

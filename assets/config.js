@@ -11,5 +11,12 @@
  */
 
 export const SUPABASE_URL = "https://tvrnwuzjhiuhjfptxfep.supabase.co";
+
+// Our own FastAPI backend. The dashboard talks straight to Supabase for
+// reads and writes (see supabase.js), but Stripe Checkout has to be
+// started server-side — only the backend holds the Stripe secret key and
+// the four price ids. Same value as extension/config.js's BACKEND_URL.
+export const BACKEND_URL =
+  "https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io";
 export const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2cm53dXpqaGl1aGpmcHR4ZmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNjQ2MDQsImV4cCI6MjEwMjc0MDYwNH0.3GyCsOl8b4Ad908uaIoheCCaVqe_uueKCB0rPsWpkl4";

@@ -19,7 +19,7 @@
  * ordinary web page instead of an extension popup.
  */
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./config.js";
+import { SUPABASE_URL, SUPABASE_ANON_KEY, BACKEND_URL } from "./config.js";
 
 const BASE_URL = SUPABASE_URL.replace(/\/$/, "");
 const AUTH_URL = `${BASE_URL}/auth/v1`;
@@ -211,6 +211,45 @@ export async function pgFetch(path, options = {}) {
     res = await fetch(`${REST_URL}${path}`, withAuth(session.accessToken));
   }
   return res;
+}
+
+/** Authenticated fetch against our own FastAPI backend rather than
+ * Supabase. Same session, same proactive-refresh-then-retry-on-401
+ * pattern as pgFetch, with two differences: no `apikey` header (the
+ * backend only reads the Bearer token — see backend/auth_deps.py), and
+ * BACKEND_URL as the base.
+ *
+ * Note the module docstring above says the backend's CORS doesn't allow
+ * this origin. That was true of the intent but not of the deployment:
+ * ALLOWED_ORIGINS is unset on the Container App, so main.py falls back to
+ * "*" and the Authorization header is permitted. Verified against the live
+ * backend with a preflight before this was written. If ALLOWED_ORIGINS is
+ * ever set, https://accordingto.app has to be in it or every call here
+ * starts failing in the browser while curl keeps working. */
+export async function apiFetch(path, options = {}) {
+  let session = await ensureFreshSession();
+  const withAuth = (token) => ({
+    ...options,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(options.headers || {})
+    }
+  });
+
+  let res = await fetch(`${BACKEND_URL}${path}`, withAuth(session.accessToken));
+  if (res.status === 401 && session.refreshToken) {
+    session = await refreshSession(session.refreshToken);
+    res = await fetch(`${BACKEND_URL}${path}`, withAuth(session.accessToken));
+  }
+  return res;
+}
+
+/** Reads `detail` (FastAPI's error shape) before falling back to the
+ * PostgREST/GoTrue keys pgError knows about. */
+export async function apiError(res, fallback) {
+  const data = await res.json().catch(() => ({}));
+  const detail = typeof data.detail === "string" ? data.detail : null;
+  return new Error(detail || data.message || fallback);
 }
 
 async function pgError(res, fallback) {

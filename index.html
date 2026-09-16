@@ -611,11 +611,74 @@
     border-top: 1px solid var(--hairline-soft);
   }
   .plan-body { margin-bottom: 14px; }
+  /* Sits below the pinned quota line, so all three cards' buttons align
+     regardless of how long the body copy above them runs. */
+  .plan-cta {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .plan-cta .btn {
+    display: block;
+    text-align: center;
+    padding: 11px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Public Sans', sans-serif;
+    width: 100%;
+  }
+  .plan-cta button.btn { border-width: 1px; border-style: solid; }
+  .plan-cta .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+  /* The annual option is a quieter second action, not a second button
+     competing with the first. */
+  .plan-alt-action {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12.5px;
+    color: var(--link);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .plan-alt-action:hover { color: var(--link-hover); }
+  .plan-state {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--sourced);
+    background: var(--sourced-tint);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .plan-hint {
+    font-size: 12.5px;
+    color: var(--meta);
+    text-align: center;
+  }
+  .plan-warn {
+    font-size: 12.5px;
+    color: var(--contradicted-text);
+    background: var(--contradicted-tint);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+  }
   .plans-note {
     font-size: 13px;
     color: var(--meta);
     margin: 20px 0 0;
   }
+  .plans-msg {
+    font-size: 13px;
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--contradicted-tint);
+    color: var(--contradicted-text);
+  }
+  .plans-msg[hidden] { display: none; }
   @media (max-width: 680px) {
     .plans { grid-template-columns: 1fr; }
   }
@@ -816,8 +879,8 @@
   <div class="wrap">
     <h2>Pricing</h2>
     <p class="section-intro">
-      Start free, no card. Plans are chosen inside the extension, on the
-      Account tab.
+      Start free, no card needed. You can subscribe here or from the
+      extension's Account tab — it's the same account either way.
     </p>
     <div class="plans">
       <div class="plan">
@@ -826,6 +889,9 @@
         <div class="plan-per">FOREVER</div>
         <div class="plan-body">Every feature of the extension — the trust list, the source lists, the dashboard. Just fewer checks.</div>
         <div class="plan-quota">25 FACT-CHECKS / MONTH</div>
+        <div class="plan-cta" data-plan="free">
+          <a class="btn btn-secondary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create free account</a>
+        </div>
       </div>
       <div class="plan">
         <div class="plan-name">Regular</div>
@@ -834,6 +900,9 @@
         <div class="plan-alt">or €64.99 a year</div>
         <div class="plan-body">Checks run on our AI key — nothing to set up, nothing else to pay for.</div>
         <div class="plan-quota">250 FACT-CHECKS / MONTH</div>
+        <div class="plan-cta" data-plan="regular">
+          <a class="btn btn-primary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create account to subscribe</a>
+        </div>
       </div>
       <div class="plan">
         <div class="plan-name">Bring your own key</div>
@@ -842,13 +911,19 @@
         <div class="plan-alt">or €34.99 a year</div>
         <div class="plan-body">About half the price, because you supply your own Anthropic API key and the model usage bills to you, not to us.</div>
         <div class="plan-quota">250 FACT-CHECKS / MONTH</div>
+        <div class="plan-cta" data-plan="byok">
+          <a class="btn btn-secondary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create account to subscribe</a>
+        </div>
       </div>
     </div>
-    <p class="plans-note">
+    <p class="plans-msg" id="plans-msg" hidden></p>
+    <p class="plans-note" id="plans-note">
       One plan at a time — Regular and bring-your-own-key are alternatives,
-      not add-ons. Switch or cancel whenever you like from the extension's
-      Account tab, which opens Stripe's own billing portal; we never see
-      your card details.
+      not add-ons. Switch or cancel whenever you like from Stripe's own
+      billing portal; we never see your card details.
+      <span id="plans-signin">Already have an account?
+      <a href="login.html?next=%2Findex.html%23pricing">Sign in</a> to
+      subscribe here.</span>
     </p>
   </div>
 </section>
@@ -867,14 +942,204 @@
 </footer>
 
 <script type="module">
-  import { getSession } from "./assets/supabase.js";
+  import { getSession, apiFetch, apiError, SessionExpiredError } from "./assets/supabase.js";
   import { initThemeToggle } from "./assets/theme.js";
   const link = document.getElementById("nav-account-link");
-  if (getSession()) {
+  const signedIn = Boolean(getSession());
+  if (signedIn) {
     link.textContent = "Dashboard";
     link.href = "app.html";
   }
   initThemeToggle(document.getElementById("theme-toggle"));
+
+  // ---------- Pricing calls to action ----------
+  //
+  // Signed out, the markup already renders "Create account" links and the
+  // page needs no JS at all. Signed in, the same slots become real
+  // purchase actions: /billing/checkout/subscription returns a Stripe
+  // Checkout URL we navigate to, so no card details ever touch this page
+  // or our backend.
+  //
+  // Checkout is deliberately only offered for the Regular plan. BYOK's
+  // endpoint requires the subscriber's own Anthropic API key in the
+  // request body (the backend validates it against Anthropic and stores it
+  // encrypted before opening Checkout), and collecting an API key belongs
+  // in the extension's Account tab, which already has that flow, rather
+  // than duplicated onto a marketing page.
+  const ctas = {
+    free: document.querySelector('.plan-cta[data-plan="free"]'),
+    regular: document.querySelector('.plan-cta[data-plan="regular"]'),
+    byok: document.querySelector('.plan-cta[data-plan="byok"]')
+  };
+  const msg = document.getElementById("plans-msg");
+  const signinHint = document.getElementById("plans-signin");
+
+  function showError(text) {
+    msg.textContent = text;
+    msg.hidden = false;
+  }
+
+  function button(label, { primary = false, onClick, disabled = false } = {}) {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "btn " + (primary ? "btn-primary" : "btn-secondary");
+    el.textContent = label;
+    if (disabled) el.disabled = true;
+    else if (onClick) el.addEventListener("click", onClick);
+    return el;
+  }
+
+  function note(text, cls) {
+    const el = document.createElement("div");
+    el.className = cls;
+    el.textContent = text;
+    return el;
+  }
+
+  // Any click that ends in a redirect disables its own button first: a
+  // second Checkout Session for a user who double-clicks is a second
+  // subscription, which is exactly what the backend's own guard exists to
+  // prevent.
+  async function goTo(path, body, btn) {
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Opening Stripe…";
+    msg.hidden = true;
+    try {
+      const res = await apiFetch(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body || {})
+      });
+      if (!res.ok) throw await apiError(res, "Could not start checkout.");
+      const data = await res.json();
+      if (!data.url) throw new Error("Checkout session came back without a URL.");
+      window.location.href = data.url;
+    } catch (err) {
+      if (err instanceof SessionExpiredError) {
+        window.location.href = "login.html?next=%2Findex.html%23pricing";
+        return;
+      }
+      btn.disabled = false;
+      btn.textContent = original;
+      showError(err.message);
+    }
+  }
+
+  function renderSubscribe() {
+    ctas.regular.replaceChildren();
+    const monthly = button("Subscribe monthly", {
+      primary: true,
+      onClick: () => goTo("/billing/checkout/subscription", { interval: "month" }, monthly)
+    });
+    ctas.regular.append(monthly);
+    const yearly = document.createElement("button");
+    yearly.type = "button";
+    yearly.className = "plan-alt-action";
+    yearly.textContent = "or €64.99 a year";
+    yearly.addEventListener("click", () =>
+      goTo("/billing/checkout/subscription", { interval: "year" }, yearly));
+    ctas.regular.append(yearly);
+
+    ctas.byok.replaceChildren(
+      note("Bring-your-own-key needs your Anthropic API key, so it's set up on the extension's Account tab.", "plan-hint")
+    );
+  }
+
+  function renderManage(sub) {
+    const plan = sub.plan;
+    const onRegular = plan === "monthly" || plan === "annual";
+    const onByok = plan === "byok_monthly" || plan === "byok_annual";
+
+    // Regular card. Portal is safe in both directions here: BYOK → Regular
+    // needs no key, and Regular → Regular-other-interval is the portal's
+    // ordinary plan switch.
+    ctas.regular.replaceChildren();
+    if (onRegular) ctas.regular.append(note("Your current plan", "plan-state"));
+    const manageRegular = button(onRegular ? "Manage billing" : "Switch in billing portal", {
+      primary: onRegular,
+      onClick: () => goTo("/billing/portal", null, manageRegular)
+    });
+    ctas.regular.append(manageRegular);
+
+    // BYOK card. Deliberately NOT a portal link for someone not already on
+    // BYOK: switching plans inside the Stripe portal never collects an
+    // Anthropic key, and that exact path is how a paying BYOK subscriber
+    // previously ended up silently stuck on free-tier limits (see the
+    // factchecker repo's CLAUDE.md, "Key decisions", billing bug 3). The
+    // extension's Account tab is the only flow that collects the key.
+    ctas.byok.replaceChildren();
+    if (onByok) {
+      ctas.byok.append(note("Your current plan", "plan-state"));
+      if (sub.byok_key_set === false) {
+        ctas.byok.append(note(
+          "No Anthropic key on file — add one on the extension's Account tab, or your checks stay on free-tier limits.",
+          "plan-warn"));
+      }
+      const manageByok = button("Manage billing", {
+        primary: true,
+        onClick: () => goTo("/billing/portal", null, manageByok)
+      });
+      ctas.byok.append(manageByok);
+    } else {
+      ctas.byok.append(note(
+        "Switching to bring-your-own-key needs your Anthropic API key, so it's done on the extension's Account tab.",
+        "plan-hint"));
+    }
+  }
+
+  if (signedIn) {
+    if (signinHint) signinHint.hidden = true;
+    // Render the purchase path immediately rather than waiting on the
+    // status call — if the backend is slow or unreachable, a signed-in
+    // visitor still gets a working Subscribe button instead of the
+    // signed-out "Create account" link they don't need.
+    for (const el of [ctas.regular, ctas.byok]) {
+      el.replaceChildren(button("Checking your plan…", { disabled: true }));
+    }
+    ctas.free.replaceChildren();
+
+    (async () => {
+      try {
+        const res = await apiFetch("/billing/status");
+        if (!res.ok) {
+          // Entitlement unknown. Offer Checkout anyway — the backend
+          // rejects a second subscription with a 400 either way, which is
+          // the actual guarantee — rather than leaving a dead button.
+          renderSubscribe();
+          return;
+        }
+        const status = await res.json();
+        // `subscription` is non-null once a Stripe customer exists at all,
+        // including after cancellation — so an entitled status is what
+        // decides between "subscribe" and "manage", not its presence.
+        const entitled = ["active", "trialing", "past_due"];
+        const sub = status.subscription;
+        if (sub && entitled.includes(sub.status)) {
+          renderManage(sub);
+        } else if (sub) {
+          // Lapsed: Checkout is the right action again, but the portal is
+          // still where invoices live.
+          renderSubscribe();
+          const portal = document.createElement("button");
+          portal.type = "button";
+          portal.className = "plan-alt-action";
+          portal.textContent = "past invoices";
+          portal.addEventListener("click", () => goTo("/billing/portal", null, portal));
+          ctas.free.replaceChildren(portal);
+        }
+        if (status.effective_plan === "free") {
+          ctas.free.replaceChildren(note("Your current plan", "plan-state"));
+        }
+      } catch (err) {
+        if (err instanceof SessionExpiredError) {
+          window.location.href = "login.html?next=%2Findex.html%23pricing";
+          return;
+        }
+        renderSubscribe();
+      }
+    })();
+  }
 </script>
 
 <script>
