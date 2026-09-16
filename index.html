@@ -1022,7 +1022,17 @@
       }
       btn.disabled = false;
       btn.textContent = original;
-      showError(err.message);
+      // An *unhandled* 500 from the backend reaches us as an opaque
+      // TypeError rather than as its own message. Starlette's
+      // ServerErrorMiddleware sits outside CORSMiddleware, so the 500 it
+      // synthesises carries no Access-Control-Allow-Origin header and the
+      // browser refuses to let us read the body — "Failed to fetch" is
+      // genuinely all fetch() gives us, even though the network tab shows
+      // the status. Anything the backend raises deliberately (an
+      // HTTPException) does come through CORS and does carry its detail.
+      showError(err instanceof TypeError
+        ? "The billing server errored and the browser blocked the response, so there's no detail to show. Please email support@accordingto.app — and you can manage an existing subscription from the extension's Account tab meanwhile."
+        : err.message);
     }
   }
 
