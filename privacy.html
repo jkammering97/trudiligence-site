@@ -9,7 +9,7 @@
      turns an XSS into stolen session tokens — and this site keeps Supabase
      access and refresh tokens in localStorage. frame-ancestors is omitted
      deliberately: it is ignored in a meta tag and would only mislead. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,8 +19,7 @@
 <meta property="og:description" content="What according to collects, why, and where it's stored." />
 <meta property="og:type" content="website" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/fonts.css" />
 <style>
   /* Same values as the extension's popup.css/content.css token blocks, so
      this page's dark mode matches the product and index.html rather than
@@ -360,15 +359,15 @@
 
     <h2>The website itself</h2>
 
-    <p>Two things on accordingto.app are loaded from outside our own
-    hosting:</p>
+    <p>Our typefaces are served from this site's own hosting. They used to
+    be loaded from Google Fonts, which meant that simply opening a page here
+    revealed your IP address to Google; they are now bundled with the site, so
+    that no longer happens and Google is not involved in an ordinary page
+    view at all.</p>
+
+    <p>Two things are still loaded from outside our own hosting:</p>
 
     <ul>
-      <li><strong>Fonts.</strong> Our typefaces are served by
-      <a href="https://fonts.google.com" target="_blank" rel="noopener">Google
-      Fonts</a>, so loading a page on this site means your browser requests
-      those font files from Google, which necessarily reveals your IP
-      address to them.</li>
       <li><strong>The demo video on the home page.</strong> It is hosted on
       YouTube, but it is not embedded until you ask for it: the home page
       shows a still placeholder, and nothing at all is requested from

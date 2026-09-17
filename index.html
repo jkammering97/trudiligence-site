@@ -9,7 +9,7 @@
      turns an XSS into stolen session tokens — and this site keeps Supabase
      access and refresh tokens in localStorage. frame-ancestors is omitted
      deliberately: it is ignored in a meta tag and would only mislead. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,8 +22,7 @@
 <meta property="og:url" content="https://accordingto.app/" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/fonts.css" />
 <style>
   /* Values below are taken from the extension's own popup.css/content.css
      token blocks so the site and the product read as one thing. Colour in
