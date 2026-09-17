@@ -93,14 +93,32 @@ export async function signIn(email, password) {
   return saveSession(data);
 }
 
+/** Where this sign-up came from, as a short channel tag. Reads ?ref= so a
+ * campaign link (a Reddit post, a newsletter) can name itself, and otherwise
+ * records that it happened on the website rather than in the extension.
+ * Whitelisted to a short, boring character set: this string is sent to
+ * Supabase and stored, so it must never be a place to put arbitrary text. */
+function signupSource() {
+  try {
+    const ref = new URLSearchParams(location.search).get("ref");
+    if (ref && /^[a-z0-9_-]{1,40}$/i.test(ref)) return ref.toLowerCase();
+  } catch {
+    // Malformed query string -- fall through to the default.
+  }
+  return "site";
+}
+
 /** Returns the new session, or null if the project requires email
  * confirmation before a session is issued (caller should show a "check
  * your inbox" message in that case, matching the extension's behavior). */
 export async function signUp(email, password) {
+  // Lands in raw_user_meta_data, which the handle_new_user trigger copies
+  // onto profiles.signup_source (see backend/supabase_setup.sql). The website
+  // has no install id to send -- that only exists inside the extension.
   const res = await fetch(`${AUTH_URL}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password, data: { signup_source: signupSource() } })
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error_description || data.msg || "Sign-up failed.");

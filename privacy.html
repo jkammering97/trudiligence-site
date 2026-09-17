@@ -9,7 +9,7 @@
      turns an XSS into stolen session tokens — and this site keeps Supabase
      access and refresh tokens in localStorage. frame-ancestors is omitted
      deliberately: it is ignored in a meta tag and would only mislead. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -214,7 +214,7 @@
 <main class="legal">
   <div class="wrap">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 2026-09-16</p>
+    <p class="updated">Last updated: 2026-09-17</p>
 
     <p>
       according to is a Chrome extension that checks claims you select
@@ -375,10 +375,16 @@
       YouTube or Google unless you press play. If you do press play, the
       video loads from youtube-nocookie.com, YouTube's no-cookie
       domain.</li>
+      <li><strong>Cloudflare Web Analytics.</strong> We count page views so we
+      can tell whether anyone is finding this site at all. It sets no cookies,
+      stores no identifier on your device, and cannot follow you to any other
+      website. There is no profile of you behind it and nothing about a visit
+      is joined to your account, even if you are signed in.</li>
     </ul>
 
-    <p>Neither of these is used to track you on our behalf, and the
-    website sets no advertising or analytics cookies of any kind.</p>
+    <p>None of these is used to track you on our behalf, and the
+    website sets no advertising cookies, and no cookies for analytics, of any
+    kind.</p>
 
     <h2>Where your data is stored</h2>
 
@@ -476,6 +482,18 @@
   import { initThemeToggle } from "./assets/theme.js";
   initThemeToggle(document.getElementById("theme-toggle"));
 </script>
+
+
+<!-- Cloudflare Web Analytics: cookieless, no cross-site profiling, free for
+     commercial use. Deliberately chosen over GA/Plausible/PostHog so the
+     privacy promise on privacy.html stays literally true.
+     This snippet is here, rather than Cloudflare's automatic injection,
+     because automatic setup cannot work on this domain: the zone's DNS is on
+     Cloudflare but the records are DNS-only (grey cloud) and point straight
+     at GitHub Pages, so no request ever passes through the proxy that would
+     do the injecting. The token is not a secret -- it is served to every
+     visitor in this page's source. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5dee5a6dd27b459882c995004326b270"}'></script>
 
 </body>
 </html>

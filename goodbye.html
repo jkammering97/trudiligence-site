@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- GitHub Pages can't set response headers, so the policy has to ride in a
+     meta tag. It is worth having even with 'unsafe-inline' (every script on
+     these pages is inline): it stops an injected script from *loading* or
+     *reaching* anywhere we don't already talk to, which is the step that
+     turns an XSS into stolen session tokens — and this site keeps Supabase
+     access and refresh tokens in localStorage. frame-ancestors is omitted
+     deliberately: it is ignored in a meta tag and would only mislead. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta name="robots" content="noindex" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<script src="assets/theme-init.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sorry to see you go — according to […]</title>
+<meta name="description" content="Tell us why you uninstalled according to. Two questions, no account needed." />
+<meta property="og:title" content="Privacy Policy — according to" />
+<meta property="og:description" content="What according to collects, why, and where it's stored." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* Same values as the extension's popup.css/content.css token blocks, so
+     this page's dark mode matches the product and index.html rather than
+     being a cooler grey of its own. A legal page should stay quiet, so the
+     colour here is limited to the callout ground and the slot yellow on
+     the "last updated" stamp — no verdict colours, since there are no
+     verdicts on this page to mean anything by them. */
+  :root {
+    --ink: #16171B;
+    --paper: #F4F1EA;
+    --white: #FFFFFF;
+    --callout: #FBF8F0;
+    --slot: #EFE47A;
+    --bracket: #8A7A22;
+    --link: #1F3FA8;
+    --link-hover: #16307E;
+    --body-text: #57544C;
+    --meta: #8A8578;
+    --hairline: #E2DDD0;
+    --hairline-soft: #EDE9DD;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F4F1EA;
+      --paper: #16171B;
+      --white: #1F2025;
+      --callout: #24211A;
+      --slot: #EFE47A;
+      --bracket: #D9C862;
+      --link: #7C9CF0;
+      --link-hover: #A9BEF2;
+      --body-text: #C9C4B8;
+      --meta: #9C9686;
+      --hairline: #35322A;
+      --hairline-soft: #2A2820;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F4F1EA;
+    --paper: #16171B;
+    --white: #1F2025;
+    --callout: #24211A;
+    --slot: #EFE47A;
+    --bracket: #D9C862;
+    --link: #7C9CF0;
+    --link-hover: #A9BEF2;
+    --body-text: #C9C4B8;
+    --meta: #9C9686;
+    --hairline: #35322A;
+    --hairline-soft: #2A2820;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: var(--link); }
+  a:hover { color: var(--link-hover); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    background: var(--white);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+  .top-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
+    font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--paper); }
+  .mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mark svg { width: 22px; height: 22px; }
+  .wordmark {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 19px;
+    white-space: nowrap;
+  }
+  .tagline {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--meta);
+    margin-top: 1px;
+  }
+
+  main.legal {
+    padding: 56px 0 64px;
+  }
+  main.legal h1 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.2;
+    margin: 0 0 4px;
+  }
+  .updated {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--bracket);
+    background: rgba(239, 228, 122, 0.32);
+    border: 1px solid rgba(239, 228, 122, 0.55);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 12px;
+    margin-bottom: 36px;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88em;
+    background: var(--callout);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 3px;
+    padding: 1px 4px;
+    color: var(--ink);
+  }
+  main.legal h2 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 19px;
+    margin: 36px 0 14px;
+  }
+  main.legal p, main.legal li {
+    color: var(--body-text);
+    font-size: 15px;
+  }
+  main.legal strong {
+    color: var(--ink);
+  }
+  main.legal ul {
+    padding-left: 20px;
+  }
+  main.legal ul li {
+    margin-bottom: 8px;
+  }
+
+  footer {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--hairline-soft);
+    color: var(--meta);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  footer a { color: var(--body-text); }
+</style>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="index.html" style="text-decoration:none; color:inherit;">
+      <div class="mark">
+        <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+      </div>
+      <div>
+        <div class="wordmark">according to</div>
+        <div class="tagline">evidence you can inspect</div>
+      </div>
+    </a>
+    <button type="button" id="theme-toggle" class="theme-toggle"></button>
+  </div>
+</header>
+
+<main class="wrap" style="max-width:640px; padding:56px 0 72px;">
+
+  <h1 style="font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:32px; line-height:1.2; margin:0 0 12px;">
+    Sorry to see you go.
+  </h1>
+
+  <p style="color:var(--body-text); font-size:17px; line-height:1.6; margin:0 0 8px;">
+    according to is uninstalled &mdash; nothing is left running in your browser. If
+    you have thirty seconds, the one thing we&rsquo;d genuinely like to know is why.
+  </p>
+  <p style="color:var(--meta); font-size:13px; line-height:1.6; margin:0 0 28px;">
+    No account, no email address, nothing that identifies you. We can&rsquo;t tell who
+    sent this and we aren&rsquo;t trying to.
+  </p>
+
+  <form id="exit-form" style="border:1px solid var(--hairline); background:var(--white); border-radius:8px; padding:24px;">
+    <fieldset style="border:0; margin:0 0 20px; padding:0;">
+      <legend style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:lowercase; color:var(--meta); padding:0 0 12px;">
+        what made you stop?
+      </legend>
+        <label class="reason">
+          <input type="radio" name="reason" value="didnt_understand" required />
+          <span>I couldn&rsquo;t tell what it was for</span>
+        </label>
+        <label class="reason">
+          <input type="radio" name="reason" value="results_not_useful" required />
+          <span>The results weren&rsquo;t useful</span>
+        </label>
+        <label class="reason">
+          <input type="radio" name="reason" value="too_slow" required />
+          <span>It was too slow</span>
+        </label>
+        <label class="reason">
+          <input type="radio" name="reason" value="didnt_need" required />
+          <span>I just didn&rsquo;t need it</span>
+        </label>
+        <label class="reason">
+          <input type="radio" name="reason" value="other" required />
+          <span>Something else</span>
+        </label>
+    </fieldset>
+
+    <label style="display:block;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--meta); display:block; margin-bottom:8px;">
+        anything else? (optional)
+      </span>
+      <textarea id="note" name="note" rows="3" maxlength="2000"
+        style="width:100%; font-family:inherit; font-size:15px; line-height:1.5; color:var(--ink);
+               background:var(--paper); border:1px solid var(--hairline); border-radius:5px; padding:10px 12px; resize:vertical;"></textarea>
+    </label>
+
+    <button type="submit" id="submit"
+      style="margin-top:20px; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer;
+             background:var(--ink); color:var(--paper); border:0; border-radius:5px; padding:12px 24px;">
+      send
+    </button>
+  </form>
+
+  <div id="thanks" hidden style="border:1px solid var(--hairline); background:var(--callout); border-radius:8px; padding:24px;">
+    <p style="margin:0 0 8px; font-family:'Newsreader',Georgia,serif; font-size:19px;">Thank you &mdash; that&rsquo;s genuinely useful.</p>
+    <p style="margin:0; color:var(--body-text); font-size:15px; line-height:1.6;">
+      If you ever want it back, it&rsquo;s on the
+      <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=goodbye" target="_blank" rel="noopener">Chrome Web Store</a>.
+    </p>
+  </div>
+
+  <p style="margin-top:28px; color:var(--meta); font-size:13px;">
+    Your account and history are untouched by uninstalling. To delete them, write to
+    <a href="mailto:support@accordingto.app">support@accordingto.app</a> &mdash; see the
+    <a href="privacy.html">privacy policy</a>.
+  </p>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+    <span>© 2026 according to</span>
+    <span>
+      <a href="index.html">Home</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:support@accordingto.app">support@accordingto.app</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .reason { display:flex; align-items:center; gap:10px; padding:9px 0; cursor:pointer; font-size:15px; }
+  .reason input { accent-color: var(--bracket); width:16px; height:16px; margin:0; }
+</style>
+
+<script type="module">
+  import { initThemeToggle } from "./assets/theme.js";
+  import { BACKEND_URL } from "./assets/config.js";
+  initThemeToggle(document.getElementById("theme-toggle"));
+
+  const form = document.getElementById("exit-form");
+  const thanks = document.getElementById("thanks");
+  const submit = document.getElementById("submit");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    submit.disabled = true;
+    submit.textContent = "sending\u2026";
+
+    const reason = form.querySelector('input[name="reason"]:checked');
+    const note = document.getElementById("note").value.trim();
+
+    // Thank them whatever happens. This person has already left; a retry
+    // prompt or an error message on the way out would be worse than losing
+    // one row, and the endpoint answers 204 on a failed write for the same
+    // reason (see backend/main.py's uninstall_feedback).
+    try {
+      await fetch(`${BACKEND_URL}/feedback/uninstall`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason_code: reason.value, note: note || null })
+      });
+    } catch {
+      // Offline, or the backend is down. Nothing useful to say about it here.
+    }
+
+    form.hidden = true;
+    thanks.hidden = false;
+  });
+</script>
+
+<!-- Cloudflare Web Analytics: cookieless, no cross-site profiling, free for
+     commercial use. Deliberately chosen over GA/Plausible/PostHog so the
+     privacy promise on privacy.html stays literally true.
+     This snippet is here, rather than Cloudflare's automatic injection,
+     because automatic setup cannot work on this domain: the zone's DNS is on
+     Cloudflare but the records are DNS-only (grey cloud) and point straight
+     at GitHub Pages, so no request ever passes through the proxy that would
+     do the injecting. The token is not a secret -- it is served to every
+     visitor in this page's source. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5dee5a6dd27b459882c995004326b270"}'></script>
+
+</body>
+</html>

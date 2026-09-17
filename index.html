@@ -9,7 +9,7 @@
      turns an XSS into stolen session tokens — and this site keeps Supabase
      access and refresh tokens in localStorage. frame-ancestors is omitted
      deliberately: it is ignored in a meta tag and would only mislead. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://tvrnwuzjhiuhjfptxfep.supabase.co https://trudiligence-backend.purplecoast-a25f4bbe.westeurope.azurecontainerapps.io https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'self'" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -785,7 +785,7 @@
     </div>
     <div class="nav-right">
       <button type="button" id="theme-toggle" class="theme-toggle"></button>
-      <a class="nav-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">Add to Chrome</a>
+      <a class="nav-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">Add to Chrome</a>
       <a id="nav-account-link" class="nav-account" href="login.html">Sign in</a>
     </div>
   </div>
@@ -802,7 +802,7 @@
       by an LLM's own opinion.
     </p>
     <div class="cta-row">
-      <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">
+      <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=hero" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
         Add to Chrome
       </a>
@@ -1023,7 +1023,7 @@
   <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
     <span>© 2026 according to</span>
     <span>
-      <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi" target="_blank" rel="noopener">Chrome Web Store</a>
+      <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">Chrome Web Store</a>
       &nbsp;·&nbsp;
       <a href="privacy.html">Privacy</a>
       &nbsp;·&nbsp;
@@ -1042,6 +1042,24 @@
     link.href = "app.html";
   }
   initThemeToggle(document.getElementById("theme-toggle"));
+
+  // ---------- Carry ?ref= into the sign-up links ----------
+  //
+  // A campaign link lands here as accordingto.app/?ref=reddit, but the
+  // account itself is created over on login.html, and the tag is read at
+  // exactly that moment (assets/supabase.js's signupSource). Without this,
+  // every campaign visitor who signs up is recorded as plain "site" and the
+  // channel that earned them is lost. Same whitelist as the reader, so a
+  // junk or hostile ?ref= is dropped here rather than forwarded.
+  (function carryRef() {
+    const ref = new URLSearchParams(location.search).get("ref");
+    if (!ref || !/^[a-z0-9_-]{1,40}$/i.test(ref)) return;
+    for (const a of document.querySelectorAll('a[href^="login.html"]')) {
+      const url = new URL(a.getAttribute("href"), location.href);
+      url.searchParams.set("ref", ref.toLowerCase());
+      a.setAttribute("href", url.pathname.split("/").pop() + url.search + url.hash);
+    }
+  })();
 
   // ---------- Pricing calls to action ----------
   //
@@ -1261,6 +1279,18 @@
     });
   })();
 </script>
+
+
+<!-- Cloudflare Web Analytics: cookieless, no cross-site profiling, free for
+     commercial use. Deliberately chosen over GA/Plausible/PostHog so the
+     privacy promise on privacy.html stays literally true.
+     This snippet is here, rather than Cloudflare's automatic injection,
+     because automatic setup cannot work on this domain: the zone's DNS is on
+     Cloudflare but the records are DNS-only (grey cloud) and point straight
+     at GitHub Pages, so no request ever passes through the proxy that would
+     do the injecting. The token is not a secret -- it is served to every
+     visitor in this page's source. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5dee5a6dd27b459882c995004326b270"}'></script>
 
 </body>
 </html>
