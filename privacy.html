@@ -213,7 +213,7 @@
 <main class="legal">
   <div class="wrap">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 2026-09-17</p>
+    <p class="updated">Last updated: 2026-09-21</p>
 
     <p>
       according to is a Chrome extension that checks claims you select
@@ -322,6 +322,19 @@
       check. If the text didn't read as a checkable claim, the steps
       below (search and stance classification) are skipped entirely and
       the result is recorded as "not assessable" with no sources.</li>
+      <li><strong>The address of the page you're on.</strong> When you run a
+      check, the extension also sends us the address of the page you ran it
+      from. It is used for exactly one thing: keeping that page out of the
+      list of sources offered as evidence. A claim you highlight is copied
+      word-for-word from the page you're reading, which makes that page the
+      closest match to itself in any search index — so without this it comes
+      back as its own proof, which is circular and misleading. We compare the
+      address against the search results, drop any that are the same page,
+      and discard it. It is never written to your search history, never sent
+      to an AI provider or a search provider, and never recorded in our logs;
+      the only thing kept is a count of how many results were dropped. We do
+      not build any record of the pages you visit, and nothing here is
+      capable of producing one.</li>
       <li><strong>Search.</strong> Finding sources for a claim means
       sending the claim text as a search query to
       <a href="https://serper.dev" target="_blank" rel="noopener">Serper.dev</a>,
