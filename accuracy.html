@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- Same policy as privacy.html; see the note there for why it rides in a
+     meta tag. This page makes no Supabase or backend calls of its own, so
+     connect-src is narrowed to the analytics beacon only. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; base-uri 'none'; form-action 'self'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<script src="assets/theme-init.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How often it gets this wrong — according to</title>
+<meta name="description" content="Measured accuracy of according to's source judgements, on 223 hand-labelled cases. Including the target it does not meet." />
+<meta property="og:title" content="How often it gets this wrong — according to" />
+<meta property="og:description" content="Measured accuracy on 223 hand-labelled cases, including the target it does not meet." />
+<meta property="og:type" content="article" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="assets/fonts.css" />
+<style>
+  /* Token block copied from privacy.html so the static pages stay in
+     lockstep. The two status colours are added because this page talks
+     about verdicts, and they are used ONLY where the number is about that
+     verdict — per BRAND.md colour carries verdict meaning and nothing else,
+     which is why the meter fill, the hero and every other accent is ink. */
+  :root {
+    --ink: #16171B;
+    --paper: #F4F1EA;
+    --white: #FFFFFF;
+    --callout: #FBF8F0;
+    --slot: #EFE47A;
+    --bracket: #8A7A22;
+    --link: #1F3FA8;
+    --link-hover: #16307E;
+    --body-text: #57544C;
+    --meta: #8A8578;
+    --hairline: #E2DDD0;
+    --hairline-soft: #EDE9DD;
+    --contradicted: #C0392B;
+    --contradicted-text: #A32E22;
+    --track: #E2DDD0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F4F1EA;
+      --paper: #16171B;
+      --white: #1F2025;
+      --callout: #24211A;
+      --slot: #EFE47A;
+      --bracket: #D9C862;
+      --link: #7C9CF0;
+      --link-hover: #A9BEF2;
+      --body-text: #C9C4B8;
+      --meta: #9C9686;
+      --hairline: #35322A;
+      --hairline-soft: #2A2820;
+      --contradicted: #E06B5D;
+      --contradicted-text: #E8897D;
+      --track: #35322A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F4F1EA;
+    --paper: #16171B;
+    --white: #1F2025;
+    --callout: #24211A;
+    --slot: #EFE47A;
+    --bracket: #D9C862;
+    --link: #7C9CF0;
+    --link-hover: #A9BEF2;
+    --body-text: #C9C4B8;
+    --meta: #9C9686;
+    --hairline: #35322A;
+    --hairline-soft: #2A2820;
+    --contradicted: #E06B5D;
+    --contradicted-text: #E8897D;
+    --track: #35322A;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  a { color: var(--link); }
+  a:hover { color: var(--link-hover); }
+
+  /* --- Article measure -----------------------------------------------
+     Two widths, deliberately. Running text sits at 680px, which is about
+     70 characters of Newsreader at this size and the width long-form is
+     comfortable at. Figures are allowed 780px so a five-column table and a
+     three-up row of numbers don't have to be cramped into the text column.
+     Everything collapses to one width below 860px. */
+  .measure { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+  .measure-wide { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    background: var(--white);
+    padding: 18px 0;
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+  .top-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--white);
+    font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: inherit;
+  }
+  .theme-toggle:hover { background: var(--paper); }
+  .mark {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--ink);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .mark svg { width: 22px; height: 22px; }
+  .wordmark { font-family: 'Newsreader', serif; font-weight: 500; font-size: 19px; white-space: nowrap; }
+  .tagline { font-family: 'Public Sans', sans-serif; font-size: 11px; font-weight: 500; color: var(--meta); margin-top: 1px; }
+
+  /* --- Masthead ------------------------------------------------------- */
+  article { padding: 72px 0 80px; }
+  h1 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.14;
+    letter-spacing: -0.012em;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .deck {
+    font-family: 'Newsreader', serif;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--meta);
+    margin: 0 0 32px;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 0;
+    border-top: 1px solid var(--hairline-soft);
+    border-bottom: 1px solid var(--hairline-soft);
+    margin-bottom: 40px;
+  }
+  .byline .mark { width: 40px; height: 40px; border-radius: 50%; }
+  .byline .mark svg { width: 24px; height: 24px; }
+  .byline-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .byline-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--meta);
+    margin-top: 2px;
+  }
+
+  /* --- Running text ---------------------------------------------------
+     Newsreader for body copy, not Public Sans. BRAND.md gives Newsreader
+     to "the name, claims, headlines — the writer's voice", and this page is
+     an argument rather than UI chrome. Sans is kept for the things that
+     really are chrome: figure labels, table headers, the byline. */
+  article p {
+    font-family: 'Newsreader', serif;
+    font-size: 20px;
+    line-height: 1.72;
+    color: var(--body-text);
+    margin: 0 0 26px;
+  }
+  article p.first { font-size: 21px; }
+  article strong { color: var(--ink); font-weight: 600; }
+  article em { font-style: italic; }
+  h2 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 52px 0 18px;
+    letter-spacing: -0.008em;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8em;
+    background: var(--callout);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--ink);
+  }
+
+  /* --- Pull quote ----------------------------------------------------- */
+  .pull {
+    font-family: 'Newsreader', serif;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--ink);
+    border-left: 3px solid var(--slot);
+    padding: 4px 0 4px 26px;
+    margin: 40px 0;
+  }
+
+  /* --- Figures --------------------------------------------------------
+     Each block of numbers is a <figure> with a <figcaption>, so it reads as
+     an exhibit in an article rather than a dashboard tile dropped into
+     prose. Captions are sans and small: they are apparatus, not voice. */
+  figure { margin: 36px 0; }
+  figcaption {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--meta);
+    margin-top: 12px;
+  }
+
+  .hero {
+    background: var(--callout);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ink);
+    border-radius: 6px;
+    padding: 30px 32px;
+    text-align: center;
+  }
+  /* Counts are IBM Plex Mono per BRAND.md ("the machine speaking"), which
+     also keeps the headline number out of the serif used for the writing —
+     a measurement is not the author's voice. Proportional figures here;
+     tabular widths make a 2-3 digit number look gappy at display size. The
+     table below is where tabular-nums actually belongs. */
+  .hero-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 68px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+  }
+  .hero-label {
+    font-family: 'Newsreader', serif;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--body-text);
+    margin: 14px auto 0;
+    max-width: 42ch;
+  }
+  .hero-sub { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--meta); margin-top: 10px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .kpi {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--meta);
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+  .kpi.is-contradicted { border-left-color: var(--contradicted); }
+  .kpi-value { font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 30px; line-height: 1.1; color: var(--ink); }
+  .kpi.is-contradicted .kpi-value { color: var(--contradicted-text); }
+  .kpi-label { font-size: 13px; line-height: 1.5; color: var(--body-text); margin-top: 8px; }
+
+  /* A ratio against a stated limit is a meter, not a one-bar bar chart. The
+     fill is ink, not a status colour: "below target" is not one of the four
+     verdicts, and borrowing a verdict colour for it would make the palette
+     mean two different things on one page. The target is a marked position
+     on the track so the gap is shown rather than described. */
+  .meter-block {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 20px 22px 18px;
+  }
+  .meter-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .meter-title { font-size: 14px; color: var(--ink); font-weight: 600; }
+  .meter-num { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--meta); }
+  .meter-track { position: relative; height: 10px; background: var(--track); border-radius: 5px; }
+  .meter-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 87%; background: var(--ink); border-radius: 5px; }
+  .meter-target { position: absolute; left: 95%; top: -5px; bottom: -5px; width: 2px; background: var(--bracket); }
+  .meter-legend {
+    display: flex; justify-content: space-between; gap: 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--meta); margin-top: 10px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: 'Public Sans', sans-serif; }
+  th, td { text-align: right; padding: 10px 10px; border-bottom: 1px solid var(--hairline-soft); }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    font-size: 11.5px; font-weight: 600; color: var(--meta);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  tbody td { color: var(--body-text); font-variant-numeric: tabular-nums; }
+  tbody th { font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 13px; color: var(--ink); }
+  tbody tr.is-weak td, tbody tr.is-weak th { background: var(--callout); }
+
+  .note {
+    background: var(--callout);
+    border: 1px solid var(--hairline-soft);
+    border-left: 3px solid var(--slot);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 36px 0;
+  }
+  .note p { margin: 0; font-size: 18px; }
+
+  .endmark {
+    margin: 52px 0 0;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--meta);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+  }
+  .backlink { margin-top: 30px; font-size: 15px; font-family: 'Public Sans', sans-serif; }
+
+  footer {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--hairline-soft);
+    color: var(--meta);
+    font-size: 13px;
+  }
+  .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  footer a { color: var(--body-text); }
+
+  @media (max-width: 860px) {
+    .measure-wide { max-width: 680px; }
+  }
+  @media (max-width: 560px) {
+    article { padding: 44px 0 56px; }
+    h1 { font-size: 32px; }
+    .deck { font-size: 18px; }
+    h2 { font-size: 24px; margin-top: 42px; }
+    article p, .note p { font-size: 18px; }
+    article p.first { font-size: 19px; }
+    .pull { font-size: 21px; padding-left: 18px; }
+    .hero { padding: 24px 20px; }
+    .hero-value { font-size: 50px; }
+    .hero-label { font-size: 17px; }
+    .kpis { grid-template-columns: 1fr; }
+    table { font-size: 13px; }
+    th, td { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="measure-wide top-inner">
+    <a class="brand" href="index.html" style="text-decoration:none; color:inherit;">
+      <div class="mark">
+        <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+      </div>
+      <div>
+        <div class="wordmark">according to</div>
+        <div class="tagline">evidence you can inspect</div>
+      </div>
+    </a>
+    <button type="button" id="theme-toggle" class="theme-toggle"></button>
+  </div>
+</header>
+
+<article>
+  <div class="measure">
+    <h1>How often it gets this wrong</h1>
+    <p class="deck">
+      Every result rests on a judgement a model makes about a snippet it
+      was handed. Models read snippets wrong. Here is how often this one
+      does, including the target it does not meet.
+    </p>
+
+    <div class="byline">
+      <div class="mark">
+        <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
+      </div>
+      <div>
+        <div class="byline-name">according to</div>
+        <div class="byline-meta">Measured 21 Sep 2026 · 4 min read</div>
+      </div>
+    </div>
+
+    <p class="first">
+      This extension does not tell you whether something is true. It tells
+      you who said it, weighs them against a list you keep yourself, and
+      shows you the sentence it based that on. All of which depends on one
+      judgement being made correctly, over and over: does this search
+      result actually say what the claim says?
+    </p>
+
+    <p>
+      That judgement is made by a language model. A model can read a
+      snippet wrong, and this one does. The numbers below are what
+      happened when 223 of those judgements were checked by hand.
+    </p>
+  </div>
+
+  <div class="measure-wide">
+    <figure>
+      <div class="hero">
+        <div class="hero-value">75%</div>
+        <div class="hero-label">of claims end up with the same verdict a human hand-labelling the same sources would give</div>
+        <div class="hero-sub">51 of 68 claims</div>
+      </div>
+      <figcaption>
+        The headline figure, and the one closest to what you see on screen:
+        a whole claim, after every source for it has been weighed together
+        into one of the four verdicts.
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="kpis">
+        <div class="kpi is-contradicted">
+          <div class="kpi-value">1 in 68</div>
+          <div class="kpi-label">claims wrongly shown as <strong>contradicted</strong> — the most damaging mistake available to it</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value">223</div>
+          <div class="kpi-label">individual source judgements labelled by hand to produce these figures</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value">61%</div>
+          <div class="kpi-label">of individual sources get the same label a human would give them</div>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="measure">
+    <h2>What these numbers actually mean</h2>
+
+    <p>
+      Two different things are being counted here, and the gap between
+      them is not an accident. The <strong>61%</strong> is per source:
+      hand the model one search result and one claim, and that is how
+      often it picks the label a human would. The <strong>75%</strong> is
+      per claim, after all of that claim's sources have been weighed
+      together. The second number is higher because a verdict survives
+      individual sources being misread. It is also the number that
+      corresponds to something you actually see.
+    </p>
+
+    <p>
+      The figure treated as the important one is neither of those.
+    </p>
+
+    <p class="pull">
+      Telling you a claim is contradicted, when the source does not
+      contradict it, is saying something untrue about the world with a
+      citation attached.
+    </p>
+
+    <p>
+      Showing <em>no source found</em> when a source existed wastes your
+      time, and you will notice. The opposite error does not announce
+      itself. So it is tracked on its own, held to a 95% bar rather than
+      folded into an average, and it currently falls short of that bar.
+    </p>
+  </div>
+
+  <div class="measure-wide">
+    <figure>
+      <div class="meter-block">
+        <div class="meter-head">
+          <span class="meter-title">When it says a source contradicts a claim, it is right</span>
+          <span class="meter-num">87% · target 95%</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill"></div>
+          <div class="meter-target" title="target: 95%"></div>
+        </div>
+        <div class="meter-legend">
+          <span>87% correct, across 15 cases it called contradicted</span>
+          <span>target 95%</span>
+        </div>
+      </div>
+      <figcaption>
+        Fifteen cases is fewer than anyone should want before trusting a
+        percentage, and that is worth saying alongside the percentage.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="measure">
+    <h2>Where it is weakest</h2>
+
+    <p>
+      Averages hide the shape of a failure. Broken out by label, one row
+      is dramatically worse than the rest.
+    </p>
+  </div>
+
+  <div class="measure-wide">
+    <figure>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Label</th>
+            <th scope="col">Precision</th>
+            <th scope="col">Recall</th>
+            <th scope="col">Cases</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">supports</th><td>0.85</td><td>0.73</td><td>55</td></tr>
+          <tr class="is-weak"><th scope="row">partial</th><td>0.29</td><td>0.17</td><td>35</td></tr>
+          <tr><th scope="row">insufficient</th><td>0.56</td><td>0.73</td><td>84</td></tr>
+          <tr><th scope="row">off_topic</th><td>0.53</td><td>0.57</td><td>30</td></tr>
+          <tr><th scope="row">contradicts</th><td>0.87</td><td>0.68</td><td>19</td></tr>
+        </tbody>
+      </table>
+      <figcaption>
+        Precision is how often a label it applied was correct. Recall is
+        how often it applied a label it should have. 223 judgements across
+        68 claims, on Claude Haiku 4.5.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="measure">
+    <p>
+      The weak row is <code>partial</code>: a source that settles one half
+      of a two-part claim and says nothing about the other half. It finds
+      under a fifth of those, and files most of the rest as
+      <code>insufficient</code>. That failure at least runs in the safe
+      direction. It under-claims rather than over-claims, so the visible
+      result is a claim that looks less well sourced than it really is.
+      It is still the thing most in need of fixing.
+    </p>
+
+    <div class="note">
+      <p>
+        It also reads only titles and search snippets. Not full articles,
+        not PDFs, and nothing behind a paywall. A claim that exists only
+        inside a document nobody has indexed comes back as <em>no source
+        found</em>, which is honest and not much help.
+      </p>
+    </div>
+
+    <h2>How this was measured</h2>
+
+    <p>
+      223 real cases, taken from actual usage rather than invented, and
+      labelled by hand one at a time. Labels were never seeded from what a
+      model said. A set labelled that way can only ever confirm the errors
+      it already contains, which makes it worse than no set at all. Where
+      a label turned out to be wrong on review, the case was corrected and
+      marked as corrected. Cases where the right answer is genuinely
+      arguable are kept and flagged rather than quietly dropped.
+    </p>
+
+    <p>
+      The verdict figure runs each claim's hand labels and the model's
+      labels through the same aggregation the product uses, with no trust
+      list applied, so what it measures is the judgement step on its own.
+      Your own ratings change which sources carry weight, and can
+      therefore move a verdict in either direction from what is shown
+      here.
+    </p>
+
+    <p>
+      Two parts of the pipeline are <strong>not</strong> covered by any of
+      this: how well a highlighted sentence gets narrowed into a checkable
+      claim, and how good the search results were to begin with. A correct
+      judgement about a poor set of sources is still a poor answer, and
+      nothing on this page measures that.
+    </p>
+
+    <h2>Why publish it</h2>
+
+    <p>
+      Because the alternative is asking you to take it on faith, and this
+      is a tool whose whole argument is that you should not have to. A
+      number chosen to flatter would be worth less than a number that
+      falls short of its own target, which is what most of these do.
+    </p>
+
+    <p>
+      They are re-measured whenever the prompts change, and this page moves
+      with them, including when they move the wrong way.
+    </p>
+
+    <div class="endmark">[ · · · ]</div>
+
+    <p class="backlink"><a href="index.html">← back to according to</a></p>
+  </div>
+</article>
+
+<footer>
+  <div class="measure-wide footer-inner">
+    <span>© 2026 according to</span>
+    <span>
+      <a href="index.html">Home</a>
+      &nbsp;·&nbsp;
+      <a href="privacy.html">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="impressum.html">Impressum</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:support@accordingto.app">support@accordingto.app</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module">
+  import { initThemeToggle } from "./assets/theme.js";
+  initThemeToggle(document.getElementById("theme-toggle"));
+</script>
+
+<!-- Cloudflare Web Analytics, same cookieless setup and the same reason as
+     every other page here; see privacy.html for the full note. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5dee5a6dd27b459882c995004326b270"}'></script>
+
+</body>
+</html>
