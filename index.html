@@ -566,6 +566,14 @@
     display: grid;
     gap: 18px;
   }
+  /* The measured-accuracy pointer. Deliberately quiet and directly under the
+     principles it makes checkable — a claim about being inspectable should
+     sit next to the thing that lets you inspect it, not in the footer. */
+  .principles-measured {
+    margin: 18px 0 0;
+    font-size: 14px;
+    color: var(--meta);
+  }
   .principle {
     border: 1px solid var(--hairline);
     border-radius: 8px;
@@ -988,6 +996,11 @@
         </div>
       </div>
     </div>
+    <p class="principles-measured">
+      Those are claims about the design, so they are measured rather than
+      asserted: 223 hand-labelled cases, re-run whenever a prompt changes.
+      <a href="accuracy.html">See how often it gets this wrong</a>.
+    </p>
   </div>
 </section>
 
@@ -1049,6 +1062,8 @@
     <span>© 2026 according to</span>
     <span>
       <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">Chrome Web Store</a>
+      &nbsp;·&nbsp;
+      <a href="accuracy.html">Accuracy</a>
       &nbsp;·&nbsp;
       <a href="privacy.html">Privacy</a>
       &nbsp;·&nbsp;
