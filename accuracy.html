@@ -277,6 +277,38 @@
     font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--meta); margin-top: 10px;
   }
 
+  /* Chart. Two series, encoded by lightness rather than hue: BRAND.md
+     reserves colour for verdict meaning, so a chromatic second series would
+     make the palette mean two things on this page. The dataviz validator
+     flags the pair as "reads gray" and outside the categorical lightness
+     band — both true and both intended — while the three checks that govern
+     legibility pass wide: CVD separation ΔE 40.9 light / 28.4 dark, normal
+     vision 41.3 / 28.5, contrast ≥3:1, against a floor of 15. Direct value
+     labels and a legend carry identity as well, so nothing rests on the
+     fill alone.
+     The highlight band is the slot yellow, which BRAND.md assigns to "the
+     claim under examination" — here, literally the row under examination. */
+  .chart { width: 100%; height: auto; display: block; }
+  .chart-bar-p { fill: var(--ink); }
+  .chart-bar-r { fill: var(--meta); }
+  .chart-band { fill: var(--slot); opacity: 0.2; }
+  .chart-grid { stroke: var(--hairline-soft); stroke-width: 1; }
+  .chart-axis { stroke: var(--hairline); stroke-width: 1; }
+  .chart-cat { fill: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+  .chart-val { fill: var(--meta); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .chart-tick { fill: var(--meta); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .chart-legend { fill: var(--body-text); font-family: 'Public Sans', sans-serif; font-size: 12px; }
+
+  details.numbers { margin-top: 18px; }
+  details.numbers summary {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    color: var(--meta);
+    cursor: pointer;
+  }
+  details.numbers summary:hover { color: var(--ink); }
+  details.numbers table { margin-top: 14px; }
+
   table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: 'Public Sans', sans-serif; }
   th, td { text-align: right; padding: 10px 10px; border-bottom: 1px solid var(--hairline-soft); }
   th:first-child, td:first-child { text-align: left; }
@@ -480,34 +512,83 @@
 
     <p>
       Averages hide the shape of a failure. Broken out by label, one row
-      is dramatically worse than the rest.
+      collapses while the rest hold up.
     </p>
   </div>
 
   <div class="measure-wide">
     <figure>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Label</th>
-            <th scope="col">Precision</th>
-            <th scope="col">Recall</th>
-            <th scope="col">Cases</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">supports</th><td>0.85</td><td>0.73</td><td>55</td></tr>
-          <tr class="is-weak"><th scope="row">partial</th><td>0.29</td><td>0.17</td><td>35</td></tr>
-          <tr><th scope="row">insufficient</th><td>0.56</td><td>0.73</td><td>84</td></tr>
-          <tr><th scope="row">off_topic</th><td>0.53</td><td>0.57</td><td>30</td></tr>
-          <tr><th scope="row">contradicts</th><td>0.87</td><td>0.68</td><td>19</td></tr>
-        </tbody>
-      </table>
+      <svg viewBox="0 0 720 341" class="chart" role="img" aria-labelledby="chart-title chart-desc" preserveAspectRatio="xMidYMid meet">
+      <title id="chart-title">Precision and recall for each stance label</title>
+      <desc id="chart-desc">Grouped bars. The partial label is far weaker than the other four, at 0.29 precision and 0.17 recall; supports and contradicts are strongest at 0.85 and 0.87 precision.</desc>
+      <rect class="chart-band" x="6" y="93" width="708" height="49" rx="4"/>
+      <line class="chart-grid" x1="116.0" y1="36" x2="116.0" y2="289"/>
+      <text class="chart-tick" x="116.0" y="307" text-anchor="middle">0</text>
+      <line class="chart-grid" x1="251.0" y1="36" x2="251.0" y2="289"/>
+      <text class="chart-tick" x="251.0" y="307" text-anchor="middle">0.25</text>
+      <line class="chart-grid" x1="386.0" y1="36" x2="386.0" y2="289"/>
+      <text class="chart-tick" x="386.0" y="307" text-anchor="middle">0.5</text>
+      <line class="chart-grid" x1="521.0" y1="36" x2="521.0" y2="289"/>
+      <text class="chart-tick" x="521.0" y="307" text-anchor="middle">0.75</text>
+      <line class="chart-grid" x1="656.0" y1="36" x2="656.0" y2="289"/>
+      <text class="chart-tick" x="656.0" y="307" text-anchor="middle">1</text>
+      <line class="chart-axis" x1="116" y1="289" x2="656" y2="289"/>
+      <rect class="chart-bar-p" x="116" y="10" width="11" height="11" rx="2"/>
+      <text class="chart-legend" x="133" y="20">precision</text>
+      <rect class="chart-bar-r" x="208" y="10" width="11" height="11" rx="2"/>
+      <text class="chart-legend" x="225" y="20">recall</text>
+      <text class="chart-cat" x="106" y="73" text-anchor="end">supports</text>
+      <path class="chart-bar-p" d="M116,50 H572.0 A3,3 0 0 1 575.0,53 V63 A3,3 0 0 1 572.0,66 H116 Z"/>
+      <text class="chart-val" x="582.0" y="62">0.85</text>
+      <path class="chart-bar-r" d="M116,70 H507.2 A3,3 0 0 1 510.2,73 V83 A3,3 0 0 1 507.2,86 H116 Z"/>
+      <text class="chart-val" x="517.2" y="82">0.73</text>
+      <text class="chart-cat" x="106" y="122" text-anchor="end">partial</text>
+      <path class="chart-bar-p" d="M116,99 H269.6 A3,3 0 0 1 272.6,102 V112 A3,3 0 0 1 269.6,115 H116 Z"/>
+      <text class="chart-val" x="279.6" y="111">0.29</text>
+      <path class="chart-bar-r" d="M116,119 H204.8 A3,3 0 0 1 207.8,122 V132 A3,3 0 0 1 204.8,135 H116 Z"/>
+      <text class="chart-val" x="214.8" y="131">0.17</text>
+      <text class="chart-cat" x="106" y="171" text-anchor="end">insufficient</text>
+      <path class="chart-bar-p" d="M116,148 H415.40000000000003 A3,3 0 0 1 418.40000000000003,151 V161 A3,3 0 0 1 415.40000000000003,164 H116 Z"/>
+      <text class="chart-val" x="425.4" y="160">0.56</text>
+      <path class="chart-bar-r" d="M116,168 H507.2 A3,3 0 0 1 510.2,171 V181 A3,3 0 0 1 507.2,184 H116 Z"/>
+      <text class="chart-val" x="517.2" y="180">0.73</text>
+      <text class="chart-cat" x="106" y="220" text-anchor="end">off_topic</text>
+      <path class="chart-bar-p" d="M116,197 H399.2 A3,3 0 0 1 402.2,200 V210 A3,3 0 0 1 399.2,213 H116 Z"/>
+      <text class="chart-val" x="409.2" y="209">0.53</text>
+      <path class="chart-bar-r" d="M116,217 H420.79999999999995 A3,3 0 0 1 423.79999999999995,220 V230 A3,3 0 0 1 420.79999999999995,233 H116 Z"/>
+      <text class="chart-val" x="430.8" y="229">0.57</text>
+      <text class="chart-cat" x="106" y="269" text-anchor="end">contradicts</text>
+      <path class="chart-bar-p" d="M116,246 H582.8 A3,3 0 0 1 585.8,249 V259 A3,3 0 0 1 582.8,262 H116 Z"/>
+      <text class="chart-val" x="592.8" y="258">0.87</text>
+      <path class="chart-bar-r" d="M116,266 H480.20000000000005 A3,3 0 0 1 483.20000000000005,269 V279 A3,3 0 0 1 480.20000000000005,282 H116 Z"/>
+      <text class="chart-val" x="490.2" y="278">0.68</text>
+      <text class="chart-tick" x="386" y="329" text-anchor="middle">share of judgements, 0 to 1</text>
+      </svg>
       <figcaption>
         Precision is how often a label it applied was correct. Recall is
         how often it applied a label it should have. 223 judgements across
         68 claims, on Claude Haiku 4.5.
       </figcaption>
+      <details class="numbers">
+        <summary>the same numbers as a table</summary>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Label</th>
+              <th scope="col">Precision</th>
+              <th scope="col">Recall</th>
+              <th scope="col">Cases</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">supports</th><td>0.85</td><td>0.73</td><td>55</td></tr>
+            <tr class="is-weak"><th scope="row">partial</th><td>0.29</td><td>0.17</td><td>35</td></tr>
+            <tr><th scope="row">insufficient</th><td>0.56</td><td>0.73</td><td>84</td></tr>
+            <tr><th scope="row">off_topic</th><td>0.53</td><td>0.57</td><td>30</td></tr>
+            <tr><th scope="row">contradicts</th><td>0.87</td><td>0.68</td><td>19</td></tr>
+          </tbody>
+        </table>
+      </details>
     </figure>
   </div>
 
