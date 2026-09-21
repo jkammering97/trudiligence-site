@@ -1249,12 +1249,70 @@
     }
   }
 
+  // Every signed-in path has to end in one of the two renderers above.
+  // "Checking your plan…" is a disabled button, so any branch that falls
+  // through leaves all three cards dead on screen — which is what happened
+  // to every free account: `subscription` stays null until a Stripe
+  // customer exists, so it matched neither the entitled nor the lapsed
+  // branch and Regular and BYOK never rendered at all, while the Free card
+  // still resolved off `effective_plan`.
+  function renderPlans(status) {
+    const entitled = ["active", "trialing", "past_due"];
+    const sub = status.subscription;
+
+    // The Free card is settled first because the lapsed branch below
+    // appends to it; writing its state afterwards used to replace the
+    // children and take "past invoices" back out with them.
+    ctas.free.replaceChildren();
+    if (status.effective_plan === "free") {
+      ctas.free.append(note("Your current plan", "plan-state"));
+    }
+
+    // `subscription` is non-null once a Stripe customer exists at all,
+    // including after cancellation — so an entitled status is what decides
+    // between "subscribe" and "manage", not its presence.
+    if (sub && entitled.includes(sub.status)) {
+      renderManage(sub);
+      return;
+    }
+    // Never subscribed, or lapsed: Checkout is the action either way. A
+    // lapsed subscriber also keeps a route to the portal, where the
+    // invoices for the subscription they used to have still live.
+    renderSubscribe();
+    if (sub) {
+      const portal = document.createElement("button");
+      portal.type = "button";
+      portal.className = "plan-alt-action";
+      portal.textContent = "past invoices";
+      portal.addEventListener("click", () => goTo("/billing/portal", null, portal));
+      ctas.free.append(portal);
+    }
+  }
+
+  // Neither apiFetch nor the session refresh it awaits first carries a
+  // timeout, so a request that never settles would strand the placeholder
+  // for the rest of the visit. Abort it and let the caller fall back to
+  // the purchase path.
+  function fetchStatus(ms = 8000) {
+    const ac = new AbortController();
+    let timer;
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        ac.abort();
+        reject(new Error("Plan lookup timed out."));
+      }, ms);
+    });
+    return Promise.race([apiFetch("/billing/status", { signal: ac.signal }), timeout])
+      .finally(() => clearTimeout(timer));
+  }
+
   if (signedIn) {
     if (signinHint) signinHint.hidden = true;
-    // Render the purchase path immediately rather than waiting on the
-    // status call — if the backend is slow or unreachable, a signed-in
-    // visitor still gets a working Subscribe button instead of the
-    // signed-out "Create account" link they don't need.
+    // The signed-out "Create account" links are wrong for this visitor, so
+    // they go straight away; the status call below decides within a moment
+    // whether each card becomes a purchase or a manage action. Every exit
+    // from that call renders something — see renderPlans — so this
+    // placeholder is never the final state.
     for (const el of [ctas.regular, ctas.byok]) {
       el.replaceChildren(button("Checking your plan…", { disabled: true }));
     }
@@ -1262,7 +1320,7 @@
 
     (async () => {
       try {
-        const res = await apiFetch("/billing/status");
+        const res = await fetchStatus();
         if (!res.ok) {
           // Entitlement unknown. Offer Checkout anyway — the backend
           // rejects a second subscription with a 400 either way, which is
@@ -1270,28 +1328,7 @@
           renderSubscribe();
           return;
         }
-        const status = await res.json();
-        // `subscription` is non-null once a Stripe customer exists at all,
-        // including after cancellation — so an entitled status is what
-        // decides between "subscribe" and "manage", not its presence.
-        const entitled = ["active", "trialing", "past_due"];
-        const sub = status.subscription;
-        if (sub && entitled.includes(sub.status)) {
-          renderManage(sub);
-        } else if (sub) {
-          // Lapsed: Checkout is the right action again, but the portal is
-          // still where invoices live.
-          renderSubscribe();
-          const portal = document.createElement("button");
-          portal.type = "button";
-          portal.className = "plan-alt-action";
-          portal.textContent = "past invoices";
-          portal.addEventListener("click", () => goTo("/billing/portal", null, portal));
-          ctas.free.replaceChildren(portal);
-        }
-        if (status.effective_plan === "free") {
-          ctas.free.replaceChildren(note("Your current plan", "plan-state"));
-        }
+        renderPlans(await res.json());
       } catch (err) {
         if (err instanceof SessionExpiredError) {
           window.location.href = "login.html?next=%2Findex.html%23pricing";
