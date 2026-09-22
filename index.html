@@ -13,15 +13,106 @@
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <script src="assets/theme-init.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>according to […] — evidence you can inspect</title>
-<meta name="description" content="according to is a browser extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim. Free for 25 checks a month. For Chrome, Edge, Brave, Opera, Vivaldi and Arc." />
+<title>Fact-checking browser extension for journalists — according to</title>
+<meta name="description" content="Highlight any claim on a page and see which sources actually back it, weighed against a trust list you curate yourself. Built for journalists, fact-checkers and professional writers. Free for 25 checks a month." />
 <link rel="canonical" href="https://accordingto.app/" />
 <meta property="og:title" content="according to […] — evidence you can inspect" />
 <meta property="og:description" content="A browser extension that checks claims on any page and reports attribution, not verdicts — real sources, weighed by a trust list you curate, with the evidence behind every claim." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://accordingto.app/" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="https://accordingto.app/assets/img/og-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="according to — evidence you can inspect" />
+<meta property="og:site_name" content="according to" />
+<meta property="og:locale" content="en" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://accordingto.app/assets/img/og-card.png" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='2' y='2' width='96' height='96' rx='18' fill='%2316171B'/%3E%3Crect x='18' y='35' width='64' height='30' rx='4' fill='%23EFE47A'/%3E%3Ccircle cx='33' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%2316171B'/%3E%3Ccircle cx='67' cy='50' r='7' fill='%2316171B'/%3E%3C/svg%3E" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://accordingto.app/#website",
+      "url": "https://accordingto.app/",
+      "name": "according to",
+      "description": "A browser extension that reports the sourcing behind a claim you highlight.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://accordingto.app/#extension",
+      "name": "according to",
+      "alternateName": "according to \u2014 fact-checking extension",
+      "applicationCategory": "BrowserApplication",
+      "applicationSubCategory": "Fact-checking and source verification",
+      "operatingSystem": "Chrome, Edge, Brave, Opera, Vivaldi, Arc",
+      "url": "https://accordingto.app/",
+      "downloadUrl": "https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi",
+      "softwareVersion": "0.0.1",
+      "description": "Highlight a claim on any web page and see which sources actually back it. Searches the live web, weighs each result against a trust list you curate, and shows the exact snippet behind every judgement. Reports attribution rather than a true/false verdict.",
+      "featureList": [
+        "Narrows a selection into up to three checkable claims, editable before any search runs",
+        "Live web search, run separately from the language model",
+        "Per-user trust list, with ratings inherited by subdomains",
+        "Four outcomes: sourced, no source found, contradicted, not assessable",
+        "Every source shown with the snippet it was judged on"
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "description": "25 checks a month"
+        },
+        {
+          "@type": "Offer",
+          "name": "Regular",
+          "price": "7.99",
+          "priceCurrency": "EUR",
+          "description": "250 checks a month, billed monthly (VAT included)"
+        },
+        {
+          "@type": "Offer",
+          "name": "Bring your own key",
+          "price": "3.99",
+          "priceCurrency": "EUR",
+          "description": "250 checks a month with your own API key, billed monthly (VAT included)"
+        }
+      ],
+      "isAccessibleForFree": true,
+      "subjectOf": {
+        "@type": "WebPage",
+        "url": "https://accordingto.app/accuracy.html",
+        "name": "Measured accuracy, including the target it does not meet"
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://accordingto.app/#faq",
+  "isPartOf": { "@id": "https://accordingto.app/#website" },
+  "mainEntity": [
+    {"@type":"Question","name":"Does it tell me whether a claim is true?","acceptedAnswer":{"@type":"Answer","text":"No. It reports attribution: which sources say something about the claim, what each one actually says, and how much weight you have given them. There are four outcomes \u2014 sourced, no source found, contradicted and not assessable \u2014 and none of them is true or false."}},
+    {"@type":"Question","name":"How is this different from searching it myself?","acceptedAnswer":{"@type":"Answer","text":"Searching is exactly what it does. The difference is that it keeps the work: it runs the search, holds on to every result, records which sentence in each result it judged the claim against, ranks them by your own source list rather than by whatever ranked first, and hands you that as something you can show an editor."}},
+    {"@type":"Question","name":"Can the AI invent a source?","acceptedAnswer":{"@type":"Answer","text":"No, because it never supplies the sources. They come from a live web search, and the model only sees the results that search returned. It is never asked whether the claim is true, only whether one specific retrieved snippet supports one specific sentence. It can still read a snippet wrong, which is why every source is shown next to the exact text it was judged on."}},
+    {"@type":"Question","name":"How accurate is it?","acceptedAnswer":{"@type":"Answer","text":"61% of individual source judgements match a human label, and 75% of claims end up with the verdict a human would give. Precision when it says a source contradicts a claim is 87%, against a 95% target that has not been met. Full per-label figures and method are published at https://accordingto.app/accuracy.html"}},
+    {"@type":"Question","name":"Who decides which sources count as credible?","acceptedAnswer":{"@type":"Answer","text":"The user does. Nothing ships with an opinion about who is reliable \u2014 source weight comes from a trust list you build yourself, and a rating carries down to a domain\u2019s subdomains but never to a lookalike domain."}},
+    {"@type":"Question","name":"Is it useful for writing rather than reporting?","acceptedAnswer":{"@type":"Answer","text":"Yes. The task it shortens is establishing who stated something first, which is as common in a commissioned feature, a book chapter or a literature review as in an investigation. It is built for journalists and fact-checkers, but nothing in it is specific to a newsroom."}},
+    {"@type":"Question","name":"Which browsers does it work in?","acceptedAnswer":{"@type":"Answer","text":"Chrome, Edge, Brave, Opera, Vivaldi and Arc \u2014 anything built on Chromium. It is published on the Chrome Web Store, and installing from there works in all of them. Firefox and Safari are not supported."}},
+    {"@type":"Question","name":"Does it work on PDFs or behind a paywall?","acceptedAnswer":{"@type":"Answer","text":"No. It reads titles and search snippets, not full articles. A claim whose only source is an unindexed PDF or an article behind a paywall comes back as no source found."}},
+    {"@type":"Question","name":"What happens to the text I select?","acceptedAnswer":{"@type":"Answer","text":"The claim you confirm is sent to the backend to be searched, and the search query and model output are stored so quality can be measured over time. The raw text you highlighted is deliberately never logged. Full detail is in the privacy policy at https://accordingto.app/privacy.html"}},
+    {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"25 checks a month are free, with no card required. Beyond that it is \u20ac7.99 a month, or \u20ac3.99 with your own API key. Both paid plans are capped at 250 checks a month. Prices include VAT."}}
+  ]
+}
+</script>
 <link rel="stylesheet" href="assets/fonts.css" />
 <style>
   /* Values below are taken from the extension's own popup.css/content.css
@@ -799,6 +890,43 @@
     main.hero { padding: 52px 0 40px; }
     .nav-install { display: none; }
   }
+
+  /* FAQ. Native <details> so the answers are in the DOM whether or not they
+     are open: a collapsed answer still gets crawled and still gets read by a
+     screen reader, which a JS accordion would not guarantee. */
+  #faq .faq-list { margin-top: 26px; }
+  #faq details {
+    border-top: 1px solid var(--hairline-soft);
+    padding: 15px 0;
+  }
+  #faq details:last-of-type { border-bottom: 1px solid var(--hairline-soft); }
+  #faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    line-height: 1.45;
+  }
+  #faq summary::-webkit-details-marker { display: none; }
+  #faq summary::after {
+    content: "+";
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    color: var(--meta);
+    flex: none;
+    line-height: 1.3;
+  }
+  #faq details[open] summary::after { content: "\2013"; }
+  #faq summary:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+  #faq .faq-a {
+    color: var(--body-text);
+    margin: 10px 0 2px;
+    line-height: 1.7;
+    max-width: 62ch;
+  }
 </style>
 </head>
 <body>
@@ -1054,6 +1182,116 @@
       <a href="login.html?next=%2Findex.html%23pricing">Sign in</a> to
       subscribe here.</span>
     </p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>Questions people ask first</h2>
+    <p class="section-intro">
+      The ones worth answering before you install anything.
+    </p>
+    <div class="faq-list">
+
+      <details>
+        <summary>Does it tell me whether a claim is true?</summary>
+        <p class="faq-a">No, and it never will. It reports attribution: which
+        sources say something about the claim, what each of them actually says,
+        and how much weight you have given them. There are four outcomes —
+        <em>sourced</em>, <em>no source found</em>, <em>contradicted</em> and
+        <em>not assessable</em> — and none of them is "true" or "false". The
+        judgement stays yours.</p>
+      </details>
+
+      <details>
+        <summary>How is this different from searching it myself?</summary>
+        <p class="faq-a">For one sentence, it isn't — searching is exactly what
+        it does. The difference is that it keeps the work: it runs the search,
+        holds on to every result, records which sentence in each result it
+        judged the claim against, ranks them by your own source list rather than
+        by whatever ranked first, and hands you that as something you can show
+        an editor. For the fortieth claim in a document, the tab-juggling is the
+        work.</p>
+      </details>
+
+      <details>
+        <summary>Can the AI invent a source?</summary>
+        <p class="faq-a">It cannot, because it never supplies the sources. They
+        come from a live web search, and the model only ever sees the results
+        that search returned. It is never asked whether the claim is true, only
+        whether one specific retrieved snippet supports one specific sentence.
+        What it can still do is read a snippet wrong, which is why every source
+        is shown next to the exact text it was judged on.</p>
+      </details>
+
+      <details>
+        <summary>How accurate is it?</summary>
+        <p class="faq-a">61% of individual source judgements match a human
+        label, and 75% of claims end up with the verdict a human would give.
+        The figure held to the highest bar is how often it is right when it says
+        a source contradicts a claim: 87%, against a 95% target that has not
+        been met. All of it, per label and with the method, is on the
+        <a href="accuracy.html">accuracy page</a>, including the parts that do
+        not flatter it.</p>
+      </details>
+
+      <details>
+        <summary>Who decides which sources count as credible?</summary>
+        <p class="faq-a">You do. Nothing ships with an opinion about who is
+        reliable — source weight comes from a trust list you build yourself, and
+        a rating carries down to a domain's subdomains but never to a lookalike
+        domain. It means the extension is least useful on the day you install
+        it, before you have rated anything, which is a real cost and a
+        deliberate one.</p>
+      </details>
+
+      <details>
+        <summary>Is it useful for writing rather than reporting?</summary>
+        <p class="faq-a">Yes, for the same reason. The task it shortens is
+        "somebody stated this as fact, and I need to know who said it first" —
+        which is as common in a commissioned feature, a book chapter or a
+        literature review as it is in an investigation. It is built for
+        journalists and fact-checkers, so the language is theirs, but nothing in
+        it is specific to a newsroom.</p>
+      </details>
+
+      <details>
+        <summary>Which browsers does it work in?</summary>
+        <p class="faq-a">Chrome, Edge, Brave, Opera, Vivaldi and Arc — anything
+        built on Chromium. The store button says Chrome because the Chrome Web
+        Store is where it is published; installing from there works in all of
+        them. Firefox and Safari are real ports rather than a switch, and are
+        not done.</p>
+      </details>
+
+      <details>
+        <summary>Does it work on PDFs or behind a paywall?</summary>
+        <p class="faq-a">It reads titles and search snippets, not full articles.
+        A claim whose only source is a PDF nobody has indexed, or an article
+        behind a paywall a search engine cannot see, comes back as
+        <em>no source found</em>. That is honest, and it is not much help — it
+        is the clearest limit the tool has.</p>
+      </details>
+
+      <details>
+        <summary>What happens to the text I select?</summary>
+        <p class="faq-a">The claim you confirm is sent to the backend so it can
+        be searched, and the search query and the model's output are stored so
+        the quality of both can be measured over time. The raw text you
+        highlighted is deliberately never logged. Full detail, including every
+        third party involved, is in the <a href="privacy.html">privacy
+        policy</a>.</p>
+      </details>
+
+      <details>
+        <summary>What does it cost?</summary>
+        <p class="faq-a">25 checks a month are free, with no card and every
+        feature included. Beyond that it is €7.99 a month, or €3.99 if you
+        bring your own API key and cover the model calls yourself. Both are
+        capped at 250 checks a month. Prices include VAT.</p>
+      </details>
+
+    </div>
   </div>
 </section>
 

@@ -1,0 +1,10 @@
+# accordingto.app
+# Everything is crawlable on purpose. The three pages that should stay out of
+# the index (the signed-in app, the sign-in form, and the post-uninstall page)
+# carry <meta name="robots" content="noindex"> instead of a Disallow here:
+# a disallowed page can never be crawled, so the crawler never reads the
+# noindex, and the URL can still end up indexed from a link elsewhere.
+User-agent: *
+Allow: /
+
+Sitemap: https://accordingto.app/sitemap.xml
