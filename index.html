@@ -927,12 +927,685 @@
     line-height: 1.7;
     max-width: 62ch;
   }
+
+  /* ---- Hero: full screen, with the product acted out on a mock page ----
+     The first screen has one job: make "select text, right-click" obvious
+     before anyone reads a word. So the right half is a stand-in browser
+     tab that plays the real flow (select → menu → editable claim → sources)
+     on a loop, and stops the moment the visitor touches it so they can do
+     it themselves. Every result it shows is prerecorded and labelled as an
+     example; text it has no result for says so and points at the install. */
+  .wrap-full { max-width: 1440px; margin: 0 auto; padding: 0 48px; }
+  main.hero.hero-split {
+    padding: 0;
+    text-align: left;
+    min-height: calc(100vh - 75px);
+    display: flex;
+    align-items: center;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(340px, 5fr) minmax(0, 9fr);
+    gap: 56px;
+    align-items: center;
+    width: 100%;
+    padding-top: 48px;
+    padding-bottom: 56px;
+  }
+  .hero-split h1 {
+    font-size: clamp(40px, 4.1vw, 62px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 22px;
+  }
+  /* Highlighter stroke under the words that name the action — the same
+     slot yellow the demo's selection sweeps in. Only the lower third is
+     tinted, so the ink glyph stays readable in both themes. */
+  .hero-split h1 .hl {
+    background: linear-gradient(var(--slot), var(--slot)) no-repeat 0 90% / 100% 0.34em;
+  }
+  .hero-split .lede { margin: 0 0 30px; max-width: 32em; font-size: 18px; }
+  .hero-split .cta-row { justify-content: flex-start; }
+  .hero-split .cta-compat { margin: 14px 0 0; max-width: 30em; }
+
+  .hd-stage { position: relative; min-width: 0; }
+  .hd-try {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--meta);
+    margin: 0 0 12px 4px;
+  }
+  .hd-try b { color: var(--ink); font-weight: 500; }
+  .hd-pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--slot);
+    box-shadow: 0 0 0 0 rgba(239, 228, 122, 0.7);
+    animation: hdPulse 1.8s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes hdPulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 228, 122, 0.75); }
+    70% { box-shadow: 0 0 0 9px rgba(239, 228, 122, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 228, 122, 0); }
+  }
+  .hd-replay {
+    margin-left: auto;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--meta);
+    background: none;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 3px 10px;
+    cursor: pointer;
+  }
+  .hd-replay:hover { color: var(--ink); background: var(--white); }
+
+  .hd-browser {
+    position: relative;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    box-shadow: 0 40px 90px -40px var(--shadow), 0 2px 8px rgba(22, 23, 27, 0.06);
+    overflow: hidden;
+    min-height: 560px;
+  }
+  .hd-chrome {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 16px;
+    background: var(--callout);
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+  .hd-lights { display: flex; gap: 6px; }
+  .hd-lights span { width: 11px; height: 11px; border-radius: 50%; background: var(--hairline); }
+  .hd-url {
+    flex: 1;
+    max-width: 440px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--meta);
+    background: var(--white);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    padding: 4px 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hd-toolbar-mark {
+    margin-left: auto;
+    width: 24px; height: 24px; border-radius: 6px;
+    background: #16171B;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .hd-toolbar-mark svg { width: 16px; height: 16px; }
+
+  .hd-page { padding: 40px 40px 48px 48px; max-width: 54%; }
+  .hd-kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--meta);
+  }
+  .hd-page h3 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: clamp(26px, 2.3vw, 34px);
+    line-height: 1.15;
+    margin: 10px 0 8px;
+    color: var(--ink);
+  }
+  .hd-byline { font-size: 13px; color: var(--meta); margin-bottom: 22px; }
+  .hd-page p {
+    font-family: 'Newsreader', serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--body-text);
+    margin: 0 0 18px;
+  }
+  .hd-page ::selection { background: var(--slot); color: #16171B; }
+  /* The two sample sentences carry a dotted underline so a visitor who
+     wants to try it knows which text has a result behind it. The yellow
+     sweep is a background-size transition: on an inline element spanning
+     several lines, the background is laid out as one continuous strip, so
+     it fills line by line the way a real drag-select does. */
+  .hd-claim {
+    color: var(--ink);
+    text-decoration: underline dotted var(--bracket);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    background-image: linear-gradient(var(--slot), var(--slot));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size 1.1s linear, color 0.2s;
+  }
+  .hd-claim.is-swept {
+    background-size: 100% 100%;
+    color: #16171B;
+    text-decoration-color: transparent;
+  }
+  .hd-fineprint {
+    position: absolute;
+    left: 48px;
+    bottom: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--meta);
+  }
+
+  .hd-cursor {
+    position: absolute;
+    left: 0; top: 0;
+    width: 22px; height: 22px;
+    z-index: 7;
+    pointer-events: none;
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  }
+  .hd-cursor.is-on { opacity: 1; }
+  .hd-cursor.is-dragging { transition-duration: 1.1s, 0.3s; transition-timing-function: linear, ease; }
+  .hd-cursor.no-anim { transition: none; }
+  .hd-cursor svg { width: 22px; height: 22px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35)); }
+  .hd-cursor::after {
+    content: "";
+    position: absolute;
+    left: -9px; top: -9px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(239, 228, 122, 0.8);
+    transform: scale(0);
+    opacity: 0;
+  }
+  .hd-cursor.is-click::after { animation: hdClick 0.35s ease-out; }
+  @keyframes hdClick {
+    from { transform: scale(0.4); opacity: 1; }
+    to { transform: scale(1.8); opacity: 0; }
+  }
+
+  .hd-menu {
+    position: absolute;
+    z-index: 6;
+    min-width: 232px;
+    background: var(--white);
+    color: var(--ink);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.35);
+    padding: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Public Sans', sans-serif;
+    font-size: 14px;
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: top left;
+    transition: opacity 0.12s, transform 0.12s;
+    pointer-events: none;
+  }
+  .hd-menu.is-open { opacity: 1; transform: none; pointer-events: auto; }
+  .hd-menu-item { padding: 5px 10px; border-radius: 5px; color: var(--body-text); }
+  .hd-menu-sep { height: 1px; background: var(--hairline); margin: 5px 6px; }
+  .hd-menu-fc {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .hd-menu-fc:hover, .hd-menu-fc.is-hot, .hd-menu-fc:focus-visible {
+    background: #2B55D6;
+    color: #FFFFFF;
+    outline: none;
+  }
+  .hd-mini {
+    width: 18px; height: 18px; border-radius: 4px;
+    background: #16171B;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .hd-mini svg { width: 13px; height: 13px; }
+
+  .hd-hint {
+    position: absolute;
+    z-index: 6;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--paper);
+    background: var(--ink);
+    border-radius: 6px;
+    padding: 5px 9px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .hd-hint.is-on { opacity: 1; transform: none; }
+
+  /* The on-page card mirrors the extension's own (content.css): paper
+     ground, Newsreader name, a verdict callout with a colour-matched left
+     border and a solid icon square, then the sources with their snippets. */
+  .hd-card {
+    position: absolute;
+    top: 68px;
+    right: 3%;
+    width: 41%;
+    max-height: calc(100% - 92px);
+    overflow: auto;
+    z-index: 5;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    box-shadow: 0 28px 60px -24px var(--shadow);
+    padding: 16px 18px 14px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+  }
+  .hd-card.is-open { opacity: 1; transform: none; pointer-events: auto; }
+  .hd-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .hd-card-name { flex: 1; font-family: 'Newsreader', serif; font-size: 17px; font-weight: 500; color: var(--ink); }
+  .hd-pill {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+  .hd-x {
+    font-size: 18px; line-height: 1; color: var(--meta);
+    background: none; border: 0; cursor: pointer; padding: 2px 4px;
+  }
+  .hd-x:hover { color: var(--ink); }
+  .hd-label { font-size: 13px; color: var(--body-text); margin: 0 0 8px; }
+  .hd-textarea {
+    display: block;
+    width: 100%;
+    font-family: 'Newsreader', serif;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 88px;
+  }
+  .hd-textarea:focus { outline: 2px solid var(--slot); border-color: var(--bracket); }
+  .hd-check {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .hd-check:hover { background: var(--ink-hover); }
+  .hd-check.is-pressed { transform: scale(0.97); }
+  .hd-loading { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--body-text); padding: 6px 0 10px; }
+  .hd-loading i {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--slot);
+    animation: hdPulse 1s infinite;
+  }
+  .hd-verdict {
+    display: flex;
+    gap: 12px;
+    padding: 13px 14px;
+    background: var(--callout);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--sourced);
+    border-radius: 8px;
+  }
+  .hd-verdict.is-na { border-left-color: var(--not-assessable); }
+  .hd-verdict.is-demo { border-left-color: var(--bracket); }
+  .hd-icon {
+    width: 32px; height: 32px; border-radius: 7px;
+    background: var(--sourced);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .is-na .hd-icon { background: var(--not-assessable); }
+  .is-demo .hd-icon { background: #16171B; }
+  .hd-icon svg { width: 17px; height: 17px; }
+  .hd-icon svg path { stroke: #F4F1EA; }
+  .hd-word { font-family: 'Public Sans', sans-serif; font-weight: 700; font-size: 15px; color: var(--sourced); }
+  .is-na .hd-word { color: var(--not-assessable); }
+  .is-demo .hd-word { color: var(--ink); }
+  .hd-sum { font-size: 13.5px; line-height: 1.5; color: var(--body-text); margin-top: 2px; }
+  .hd-sum b { color: var(--ink); font-weight: 600; }
+  .hd-demo-cta { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .hd-demo-cta .btn { padding: 9px 14px; font-size: 12.5px; }
+  .hd-demo-cta button.btn { cursor: pointer; font-family: 'Public Sans', sans-serif; }
+  .hd-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin: 12px 0 2px;
+    padding: 9px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--body-text);
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .hd-toggle:hover { color: var(--ink); }
+  .hd-sources { list-style: none; margin: 8px 0 0; padding: 0; }
+  .hd-sources[hidden] { display: none; }
+  .hd-src {
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    gap: 2px 8px;
+    padding: 10px 0;
+    border-top: 1px solid var(--hairline-soft);
+    opacity: 0;
+    animation: hdIn 0.35s forwards;
+  }
+  .hd-src:nth-child(2) { animation-delay: 0.12s; }
+  .hd-src:nth-child(3) { animation-delay: 0.24s; }
+  @keyframes hdIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .hd-src-mark { font-size: 13px; color: var(--meta); line-height: 1.5; }
+  .hd-dom { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13.5px; color: var(--ink); }
+  .hd-trust {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    border-radius: 999px;
+    padding: 1px 8px;
+    align-self: start;
+  }
+  .hd-trust.t-high { color: var(--sourced); background: var(--sourced-tint); }
+  .hd-trust.t-low { color: var(--contradicted-text); background: var(--contradicted-tint); }
+  .hd-trust.t-unrated { color: var(--meta); background: var(--not-assessable-tint); }
+  .hd-title, .hd-snip { grid-column: 2 / 4; font-family: 'Newsreader', serif; }
+  .hd-title { font-size: 14.5px; line-height: 1.35; color: var(--ink); }
+  .hd-snip { font-size: 13.5px; font-style: italic; line-height: 1.45; color: var(--body-text); }
+
+  .hd-steps {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .hd-steps button {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 10px 12px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--body-text);
+    background: transparent;
+    border: 1px solid var(--hairline-soft);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .hd-steps button:hover { background: var(--white); }
+  .hd-steps b { display: block; color: var(--ink); font-weight: 600; }
+  .hd-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--meta);
+    background: var(--hairline-soft);
+    transition: background 0.2s, color 0.2s;
+  }
+  .hd-steps li.is-done .hd-num { background: var(--slot); color: #16171B; }
+  .hd-steps li.is-active button { background: var(--white); border-color: var(--ink); color: var(--ink); }
+  .hd-steps li.is-active .hd-num { background: var(--ink); color: var(--paper); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hd-claim, .hd-cursor, .hd-menu, .hd-card, .hd-hint, .hd-steps button { transition: none; }
+    .hd-src { animation: none; opacity: 1; }
+    .hd-pulse, .hd-loading i { animation: none; }
+  }
+  @media (max-width: 1100px) {
+    main.hero.hero-split { min-height: 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; padding-bottom: 56px; }
+    .hero-copy { text-align: center; max-width: 640px; margin: 0 auto; }
+    .hero-split .lede, .hero-split .cta-compat { margin-left: auto; margin-right: auto; }
+    .hero-split .cta-row { justify-content: center; }
+  }
+  @media (max-width: 720px) {
+    .wrap-full { padding-left: 16px; padding-right: 16px; }
+    .hd-browser { min-height: 0; }
+    .hd-page { max-width: none; padding: 24px 20px 40px; }
+    .hd-fineprint { left: 20px; }
+    .hd-card { position: relative; top: auto; right: auto; width: auto; max-height: none; margin: 0 14px 40px; }
+    .hd-card:not(.is-open) { display: none; }
+    .hd-steps { grid-template-columns: 1fr 1fr; }
+    .hd-replay { display: none; }
+  }
+
+  /* ---- Install buttons: the slot yellow stays the fill; a line of the
+     brand's sourced green (#2F6B4F, BRAND.md) rings every primary action,
+     so the way to the download reads as one thing wherever it appears. ---- */
+  .btn-primary, .nav-install {
+    border: 1.5px solid var(--sourced);
+    box-shadow: 0 0 0 3px var(--sourced-tint);
+    transition: box-shadow 0.15s, background 0.15s;
+  }
+  .btn-primary:hover, .nav-install:hover { box-shadow: 0 0 0 5px var(--sourced-tint); }
+
+  html { scroll-padding-top: 76px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  /* ---- Journey bar: appears once the hero is scrolled past. Names the
+     five stops on the way down, marks the current one, keeps the install
+     one click away, and draws a green line along its bottom edge as the
+     reader gets closer to pricing. ---- */
+  .journey {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--white) 92%, transparent);
+    backdrop-filter: saturate(1.2) blur(10px);
+    -webkit-backdrop-filter: saturate(1.2) blur(10px);
+    border-bottom: 1px solid var(--hairline-soft);
+    transform: translateY(-100%);
+    transition: transform 0.25s ease;
+  }
+  .journey.is-on { transform: none; }
+  .journey-inner { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .journey-brand {
+    font-family: 'Newsreader', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .journey-brand:hover { color: var(--ink); }
+  .journey ol { list-style: none; display: flex; gap: 4px; margin: 0 auto; padding: 0; }
+  .journey ol a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--body-text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .journey ol a span { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--meta); }
+  .journey ol a:hover { color: var(--ink); background: var(--paper); }
+  .journey ol a.is-active { color: var(--ink); background: var(--paper); box-shadow: inset 0 0 0 1px var(--hairline); }
+  .journey ol a.is-active span { color: var(--sourced); }
+  .journey-cta { padding: 8px 16px; font-size: 13px; white-space: nowrap; margin-left: auto; }
+  .journey ol + .journey-cta { margin-left: 0; }
+  .journey-progress {
+    position: absolute;
+    left: 0; bottom: -1px;
+    height: 2px;
+    width: 100%;
+    background: var(--sourced);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  /* ---- Lower sections: the hero's side-by-side idea, carried down the
+     page. A sticky left column (number, heading, intro, the next step)
+     and the content on the right, at the same full width as the hero. ---- */
+  section.band { padding: 96px 0; }
+  section.band-alt { background: var(--white); }
+  .split {
+    display: grid;
+    grid-template-columns: minmax(260px, 4fr) minmax(0, 9fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .split-head { position: sticky; top: 96px; }
+  .split-kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--meta);
+    margin-bottom: 14px;
+  }
+  .split h2, .final-cta h2 {
+    font-size: clamp(30px, 2.8vw, 44px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0 0 16px;
+  }
+  .split .section-intro { margin: 0 0 16px; font-size: 16px; max-width: 26em; }
+  .split .video-note { margin: 0 0 22px; }
+  .split .principles-measured { margin: 0 0 22px; font-size: 15px; max-width: 26em; }
+  .split-cta { margin: 8px 0 0; }
+  /* The "next stop" link: plain text with the green line under it, so
+     every section hands the reader on towards pricing. */
+  .split-next {
+    display: table;
+    margin-top: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1.5px solid var(--sourced);
+    padding-bottom: 2px;
+  }
+  .split-next:hover { color: var(--sourced); }
+  .split-next span { display: inline-block; margin-left: 4px; transition: transform 0.15s; }
+  .split-next:hover span { transform: translateY(2px); }
+  .split-body { min-width: 0; }
+  .split .detail-head { margin-top: 52px; }
+  .split .principles { grid-template-columns: 1fr 1fr; }
+  #faq .split-body .faq-list { margin-top: 0; }
+  .band-alt .flow li { background: var(--paper); }
+
+  /* Free is the first step for everyone, so it gets the green-ringed
+     button and a quiet label; the paid plans read as "later". */
+  .plan-free { border-color: var(--sourced); box-shadow: 0 0 0 3px var(--sourced-tint); }
+  .plan-flag {
+    align-self: flex-start;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--sourced);
+    background: var(--sourced-tint);
+    border-radius: 999px;
+    padding: 2px 9px;
+    margin-bottom: 10px;
+  }
+
+  /* Getting started, stated before the reader hits the sign-in screen —
+     including why an account is needed at all. */
+  .start-strip {
+    margin-top: 28px;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    background: var(--paper);
+    padding: 20px 22px;
+  }
+  .start-kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--meta);
+    margin-bottom: 14px;
+  }
+  .start-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .start-steps li { display: flex; gap: 12px; font-size: 14px; line-height: 1.5; color: var(--body-text); }
+  .start-steps b { display: block; color: var(--ink); font-weight: 600; }
+  .start-steps .n {
+    width: 24px; height: 24px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--sourced);
+    border: 1.5px solid var(--sourced);
+  }
+
+  /* Last stop before the footer: the same two actions, one more time. */
+  .final-cta { text-align: center; }
+  .final-cta .final-inner { max-width: 760px; }
+  .final-cta p { color: var(--body-text); font-size: 17px; margin: 0 auto 28px; max-width: 34em; }
+  .final-cta h2 .hl { background: linear-gradient(var(--slot), var(--slot)) no-repeat 0 90% / 100% 0.34em; }
+
+  @media (max-width: 1100px) {
+    section.band { padding: 64px 0; }
+    .split { grid-template-columns: 1fr; gap: 28px; }
+    .split-head { position: static; }
+    .split .principles { grid-template-columns: 1fr; }
+    .journey ol { display: none; }
+  }
+  @media (max-width: 720px) {
+    section.band { padding: 48px 0; }
+    .start-steps { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
-  <div class="wrap top-inner">
+  <div class="wrap top-inner wrap-full">
     <div class="brand">
       <div class="mark">
         <svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg>
@@ -950,39 +1623,127 @@
   </div>
 </header>
 
-<main class="hero">
-  <div class="wrap">
-    <div class="eyebrow">NOW ON THE CHROME WEB STORE</div>
-    <h1>Check claims on any page,<br />right where you read them.</h1>
-    <p class="lede">
-      Highlight a claim, right-click, and according to searches for real
-      sources, weighs them by a trust list you <b>curate yourself</b>, and shows
-      you the evidence behind it.
-    </p>
-    <div class="cta-row">
-      <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=hero" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
-        Try for free
-      </a>
-      <a class="btn btn-secondary" href="#demo">Watch the demo</a>
+<main class="hero hero-split">
+  <div class="wrap-full hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">NOW ON THE CHROME WEB STORE</div>
+      <h1><span class="hl">Check claims</span> on any page,<br />right where you read them.</h1>
+      <p class="lede">
+        Highlight a claim, right-click, and according to searches for real
+        sources, weighs them by a trust list you <b>curate yourself</b>, and shows
+        you the evidence behind it.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=hero" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+          Try for free
+        </a>
+        <a class="btn btn-secondary" href="#demo">Watch the demo</a>
+      </div>
+      <p class="cta-compat">
+        Installs from the Chrome Web Store — and works the same in
+        <b>Edge</b>, <b>Brave</b>, <b>Opera</b>, <b>Vivaldi</b> and
+        <b>Arc</b>, or any other Chromium browser.
+      </p>
+      <div class="badge">Free for 25 fact-checks a month · no card needed</div>
     </div>
-    <p class="cta-compat">
-      Installs from the Chrome Web Store — and works the same in
-      <b>Edge</b>, <b>Brave</b>, <b>Opera</b>, <b>Vivaldi</b> and
-      <b>Arc</b>, or any other Chromium browser.
-    </p>
-    <div class="badge">Free for 25 fact-checks a month · no card needed</div>
+
+    <div class="hd-stage" role="region" aria-label="Interactive example of a fact-check">
+      <div class="hd-try">
+        <span class="hd-pulse" aria-hidden="true"></span>
+        <span>Try it: <b>select an underlined sentence</b>, then right-click</span>
+        <button type="button" class="hd-replay" id="hd-replay">↻ replay</button>
+      </div>
+
+      <div class="hd-browser" id="hd-browser">
+        <div class="hd-chrome" aria-hidden="true">
+          <div class="hd-lights"><span></span><span></span><span></span></div>
+          <div class="hd-url">any-news-site.example/food/where-lemons-come-from</div>
+          <div class="hd-toolbar-mark"><svg viewBox="0 0 100 100"><rect x="18" y="35" width="64" height="30" rx="4" fill="#EFE47A"/><circle cx="33" cy="50" r="7" fill="#16171B"/><circle cx="50" cy="50" r="7" fill="#16171B"/><circle cx="67" cy="50" r="7" fill="#16171B"/></svg></div>
+        </div>
+
+        <article class="hd-page" id="hd-page">
+          <div class="hd-kicker">FOOD · HISTORY</div>
+          <h3>Where do lemons actually come from?</h3>
+          <div class="hd-byline">An example article, for trying the extension</div>
+          <p>
+            Most of what sits in a fruit bowl has been shaped by people over
+            centuries, and the lemon is a favourite example.
+            <span class="hd-claim" id="hd-claim-lemon">Lemons were created by the purposeful crossbreeding of an orange and a citron.</span>
+            Today they turn up in almost every kitchen.
+          </p>
+          <p>
+            <span class="hd-claim" id="hd-claim-opinion">Nothing beats a glass of cold lemonade on a hot afternoon.</span>
+            Some readers swear by a pinch of salt in it.
+          </p>
+        </article>
+
+        <div class="hd-fineprint" aria-hidden="true">example page · prerecorded example results</div>
+
+        <div class="hd-cursor" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 2l15 11-6.6 1.1L16 21l-3 1.4-3.6-6.9L4 19z" fill="#16171B" stroke="#FFFFFF" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="hd-menu" id="hd-menu" role="menu" aria-label="Context menu">
+          <div class="hd-menu-item" aria-hidden="true">Copy</div>
+          <div class="hd-menu-item" aria-hidden="true">Print…</div>
+          <div class="hd-menu-sep" aria-hidden="true"></div>
+          <button type="button" class="hd-menu-item hd-menu-fc" role="menuitem">
+            <span class="hd-mini" aria-hidden="true"><svg viewBox="0 0 100 100"><rect x="14" y="33" width="72" height="34" rx="5" fill="#EFE47A"/><circle cx="32" cy="50" r="8" fill="#16171B"/><circle cx="50" cy="50" r="8" fill="#16171B"/><circle cx="68" cy="50" r="8" fill="#16171B"/></svg></span>
+            Fact-check selection
+          </button>
+        </div>
+
+        <div class="hd-hint" id="hd-hint">now right-click the selection</div>
+
+        <div class="hd-card" id="hd-card" aria-live="polite"></div>
+      </div>
+
+      <ol class="hd-steps" id="hd-steps">
+        <li><button type="button" data-step="1"><span class="hd-num">1</span><span><b>Select</b>a sentence on any page</span></button></li>
+        <li><button type="button" data-step="2"><span class="hd-num">2</span><span><b>Right-click</b>Fact-check selection</span></button></li>
+        <li><button type="button" data-step="3"><span class="hd-num">3</span><span><b>Confirm</b>edit the claim if you like</span></button></li>
+        <li><button type="button" data-step="4"><span class="hd-num">4</span><span><b>Read the sources</b>who backs it, who doesn't</span></button></li>
+      </ol>
+    </div>
   </div>
 </main>
 
-<section id="demo">
-  <div class="wrap">
-    <h2>See it work</h2>
-    <p class="section-intro">
+<nav class="journey" id="journey" aria-label="Page sections">
+  <div class="wrap-full journey-inner">
+    <a class="journey-brand" href="#">according to</a>
+    <ol>
+      <li><a href="#demo"><span>01</span>Demo</a></li>
+      <li><a href="#how-it-works"><span>02</span>How it works</a></li>
+      <li><a href="#principles"><span>03</span>Principles</a></li>
+      <li><a href="#pricing"><span>04</span>Pricing</a></li>
+      <li><a href="#faq"><span>05</span>Questions</a></li>
+    </ol>
+    <a class="btn btn-primary journey-cta" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=journey" target="_blank" rel="noopener">Add to Chrome, free</a>
+  </div>
+  <div class="journey-progress" id="journey-progress"></div>
+</nav>
+
+<section id="demo" class="band">
+  <div class="wrap-full split">
+    <div class="split-head">
+      <div class="split-kicker">01 · THE DEMO</div>
+      <h2>See it work</h2>
+      <p class="section-intro">
       One selection, one right-click, and the sources behind the claim —
       start to finish.
     </p>
-    <div class="video-shell">
+      <p class="video-note">
+      Nothing is requested from YouTube until you press play.
+    </p>
+      <a class="btn btn-primary btn-install split-cta" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=demo" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome, free
+      </a>
+      <a class="split-next" href="#how-it-works">Next: how it works<span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="split-body">
+      <div class="video-shell">
       <button type="button" class="video-facade" id="demo-play" aria-label="Play the according to demo video">
         <img class="video-poster" src="assets/img/demo-poster.jpg" width="1280" height="720"
              loading="lazy" decoding="async" alt="" />
@@ -993,16 +1754,24 @@
         <span class="sub">fact-checking a claim, end to end</span>
       </button>
     </div>
-    <p class="video-note">
-      Nothing is requested from YouTube until you press play.
-    </p>
+    </div>
   </div>
 </section>
 
-<section id="how-it-works">
-  <div class="wrap-wide">
-    <h2>How it works</h2>
-    <ol class="flow">
+<section id="how-it-works" class="band band-alt">
+  <div class="wrap-full split">
+    <div class="split-head">
+      <div class="split-kicker">02 · THE PIPELINE</div>
+      <h2>How it works</h2>
+      <p class="section-intro">Four steps. The search and the judgement are separate, and you can see into both.</p>
+      <a class="btn btn-primary btn-install split-cta" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=how" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome, free
+      </a>
+      <a class="split-next" href="#principles">Next: why you can check the result<span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="split-body">
+      <ol class="flow">
       <li>
         <div class="flow-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="14" height="6" rx="1.5" fill="currentColor" opacity="0.22" stroke="none"/><path d="M2.5 7h14M2.5 13h14" stroke="currentColor"/><path d="M13 14.5l7 7M13 14.5v5.5M13 14.5h5.5" /></svg>
@@ -1036,10 +1805,8 @@
         <div class="flow-sub">Every source listed and rated, so you can check the check.</div>
       </li>
     </ol>
-  </div>
-  <div class="wrap-wide">
-    <div class="detail-head">IN MORE DETAIL</div>
-    <div class="detail-grid">
+      <div class="detail-head">IN MORE DETAIL</div>
+      <div class="detail-grid">
     <ol class="steps">
       <li>
         <div class="num">1</div>
@@ -1080,13 +1847,28 @@
       </figcaption>
     </figure>
     </div>
+    </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <h2>Built to be inspected, not just trusted</h2>
-    <div class="principles">
+<section id="principles" class="band">
+  <div class="wrap-full split">
+    <div class="split-head">
+      <div class="split-kicker">03 · THE PRINCIPLES</div>
+      <h2>Built to be inspected, not just trusted</h2>
+      <p class="principles-measured">
+      Those are claims about the design, so they are measured rather than
+      asserted: 223 hand-labelled cases, re-run whenever a prompt changes.
+      <a href="accuracy.html">See how often it gets this wrong</a>.
+    </p>
+      <a class="btn btn-primary btn-install split-cta" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=principles" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome, free
+      </a>
+      <a class="split-next" href="#pricing">Next: what it costs<span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="split-body">
+      <div class="principles">
       <div class="principle">
         <div class="principle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h9l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M13.5 4v5.5H19"/><circle cx="11" cy="14" r="2.6"/><path d="M12.9 15.9L15 18"/></svg></div>
         <div>
@@ -1123,30 +1905,32 @@
         </div>
       </div>
     </div>
-    <p class="principles-measured">
-      Those are claims about the design, so they are measured rather than
-      asserted: 223 hand-labelled cases, re-run whenever a prompt changes.
-      <a href="accuracy.html">See how often it gets this wrong</a>.
-    </p>
+    </div>
   </div>
 </section>
 
-<section id="pricing">
-  <div class="wrap">
-    <h2>Pricing</h2>
-    <p class="section-intro">
+<section id="pricing" class="band band-alt">
+  <div class="wrap-full split">
+    <div class="split-head">
+      <div class="split-kicker">04 · PRICING</div>
+      <h2>Pricing</h2>
+      <p class="section-intro">
       Start free, no card needed. You can subscribe here or from the
       extension's Account tab — it's the same account either way.
     </p>
-    <div class="plans">
-      <div class="plan">
+      <a class="split-next" href="#faq">Questions first?<span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="split-body">
+      <div class="plans">
+      <div class="plan plan-free">
+        <div class="plan-flag">START HERE</div>
         <div class="plan-name">Free</div>
         <div class="plan-price">€0</div>
         <div class="plan-per">FOREVER</div>
         <div class="plan-body">Every feature of the extension — the trust list, the source lists, the dashboard. Just fewer checks.</div>
         <div class="plan-quota">25 FACT-CHECKS / MONTH</div>
         <div class="plan-cta" data-plan="free">
-          <a class="btn btn-secondary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create free account</a>
+          <a class="btn btn-primary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create free account</a>
         </div>
       </div>
       <div class="plan">
@@ -1157,7 +1941,7 @@
         <div class="plan-body">Checks run on our AI key — nothing to set up, nothing else to pay for.</div>
         <div class="plan-quota">250 FACT-CHECKS / MONTH</div>
         <div class="plan-cta" data-plan="regular">
-          <a class="btn btn-primary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create account to subscribe</a>
+          <a class="btn btn-secondary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create account to subscribe</a>
         </div>
       </div>
       <div class="plan">
@@ -1181,16 +1965,34 @@
       <a href="login.html?next=%2Findex.html%23pricing">Sign in</a> to
       subscribe here.</span>
     </p>
+      <div class="start-strip">
+        <div class="start-kicker">GETTING STARTED TAKES A MINUTE</div>
+        <ol class="start-steps">
+          <li><span class="n">1</span><div><b>Add it to Chrome</b>Free, from the Chrome Web Store. Works in any Chromium browser.</div></li>
+          <li><span class="n">2</span><div><b>Create your free account</b>Here or in the extension. It holds your trust list, so your ratings are there on every page.</div></li>
+          <li><span class="n">3</span><div><b>Highlight any sentence</b>Right-click, choose "Fact-check selection", and read the sources. 25 checks a month are free.</div></li>
+        </ol>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="faq">
-  <div class="wrap">
-    <h2>Questions people ask first</h2>
-    <p class="section-intro">
+<section id="faq" class="band">
+  <div class="wrap-full split">
+    <div class="split-head">
+      <div class="split-kicker">05 · QUESTIONS</div>
+      <h2>Questions people ask first</h2>
+      <p class="section-intro">
       The ones worth answering before you install anything.
     </p>
-    <div class="faq-list">
+      <a class="btn btn-primary btn-install split-cta" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=faq" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome, free
+      </a>
+      <a class="split-next" href="#pricing">Back to pricing<span aria-hidden="true">↑</span></a>
+    </div>
+    <div class="split-body">
+      <div class="faq-list">
 
       <details>
         <summary>Does it tell me whether a claim is true?</summary>
@@ -1291,11 +2093,27 @@
       </details>
 
     </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band-alt final-cta">
+  <div class="wrap final-inner">
+    <div class="split-kicker">READY WHEN YOU ARE</div>
+    <h2>Check the <span class="hl">next claim</span> you read.</h2>
+    <p>25 fact-checks a month, free, with no card needed. Works in Chrome, Edge, Brave, Opera, Vivaldi and Arc.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=final" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Add to Chrome, free
+      </a>
+      <a class="btn btn-secondary" href="login.html?mode=signup&amp;next=%2Findex.html%23pricing">Create free account</a>
+    </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+  <div class="wrap wrap-full" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
     <span>© 2026 according to</span>
     <span>
       <a href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">Chrome Web Store</a>
@@ -1606,6 +2424,422 @@
      at GitHub Pages, so no request ever passes through the proxy that would
      do the injecting. The token is not a secret -- it is served to every
      visitor in this page's source. -->
+<script>
+  // ---------- Hero demo: the product acted out on a mock page ----------
+  //
+  // Plays select → right-click → editable claim → sources on a loop, and
+  // hands over to the visitor the moment they touch the mock page, so they
+  // can do the same thing by hand. Results are prerecorded for the two
+  // underlined sentences only; anything else gets an honest "install to
+  // check your own" card rather than an invented verdict.
+  (() => {
+    const browser = document.getElementById("hd-browser");
+    if (!browser) return;
+    const page = document.getElementById("hd-page");
+    const menu = document.getElementById("hd-menu");
+    const menuFc = menu.querySelector(".hd-menu-fc");
+    const card = document.getElementById("hd-card");
+    const hint = document.getElementById("hd-hint");
+    const cursor = browser.querySelector(".hd-cursor");
+    const steps = Array.from(document.querySelectorAll("#hd-steps li"));
+    const claims = {
+      lemon: document.getElementById("hd-claim-lemon"),
+      opinion: document.getElementById("hd-claim-opinion")
+    };
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const STORE_URL = "https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&utm_medium=site&utm_campaign=hero-demo";
+
+    const ICON = {
+      check: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+      dash: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+      slot: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M8 6H6v12h2M16 6h2v12h-2"/></svg>'
+    };
+
+    // Prerecorded outcomes. Wording follows the extension's own: the summary
+    // line is stance.py's, the not-assessable line is main.py's.
+    const RESULTS = {
+      lemon: {
+        tone: "",
+        icon: ICON.check,
+        word: "sourced",
+        summary: "2 of 3 sources, including forbes.com (high trust) support this claim.",
+        toggle: "See 3 sources (2 support, 1 contradict)",
+        sources: [
+          { mark: "✓", domain: "forbes.com", trust: "high",
+            title: "Meet The Fruit That Didn’t Exist In The Wild Until Humans Created It",
+            snippet: "“…lemons emerged from the deliberate crossing and selecting of ancestral citrus. In other words, nature didn’t make lemons; people did.”" },
+          { mark: "✕", domain: "snopes.com", trust: "unrated",
+            title: "Lemons Are 'Manmade' Hybrid Fruits That 'Don't Occur Naturally'?",
+            snippet: "“In short, the claim that lemons are not ‘naturally occurring’ because they are a manmade hybrid of two different fruits is false…”" },
+          { mark: "✓", domain: "reddit.com", trust: "low",
+            title: "Apparently, a lemon is not naturally occurring and is a … - Reddit",
+            snippet: "“TIL life didn't give us lemons, they are not naturally occurring. They are a hybrid fruit from selective breeding of the citron and the bitter…”" }
+        ]
+      },
+      opinion: {
+        tone: "is-na",
+        icon: ICON.dash,
+        word: "not assessable",
+        summary: "This reads as an opinion or anecdote, not a checkable factual claim.",
+        after: "Nothing was searched. It won't pretend an opinion has a source."
+      }
+    };
+
+    let run = 0;              // bumped to cancel whatever the autoplay was doing
+    let autoplay = !reduceMotion;
+    let pending = null;       // { key, original } for the claim being confirmed
+
+    const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    /** A client rect, re-expressed relative to the mock browser window. */
+    function rel(r) {
+      const b = browser.getBoundingClientRect();
+      return { left: r.left - b.left, top: r.top - b.top, right: r.right - b.left, bottom: r.bottom - b.top, width: r.width, height: r.height };
+    }
+
+    /** First and last line box of a (possibly wrapped) sample sentence. */
+    function claimEnds(el) {
+      const rects = el.getClientRects();
+      return { first: rel(rects[0]), last: rel(rects[rects.length - 1]) };
+    }
+
+    /** Lights the step strip: n is active, everything before it is done. */
+    function setStep(n) {
+      steps.forEach((li, i) => {
+        li.classList.toggle("is-active", i + 1 === n);
+        li.classList.toggle("is-done", i + 1 < n);
+      });
+    }
+
+    function moveCursor(x, y, drag = false) {
+      cursor.classList.toggle("is-dragging", drag);
+      cursor.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function clickCursor() {
+      cursor.classList.remove("is-click");
+      void cursor.offsetWidth;
+      cursor.classList.add("is-click");
+    }
+
+    /** Opens the fake context menu at (x, y), kept inside the window. */
+    function openMenu(x, y) {
+      menu.classList.add("is-open");
+      const w = menu.offsetWidth, h = menu.offsetHeight;
+      menu.style.left = Math.max(8, Math.min(x, browser.clientWidth - w - 8)) + "px";
+      menu.style.top = Math.max(8, Math.min(y, browser.clientHeight - h - 8)) + "px";
+    }
+
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      menuFc.classList.remove("is-hot");
+    }
+
+    function showHint(x, y) {
+      hint.style.left = Math.max(8, Math.min(x, browser.clientWidth - hint.offsetWidth - 8)) + "px";
+      hint.style.top = y + "px";
+      hint.classList.add("is-on");
+    }
+
+    const hideHint = () => hint.classList.remove("is-on");
+
+    function cardTop() {
+      return `
+        <div class="hd-card-top">
+          <span class="hd-card-name">according to</span>
+          <span class="hd-pill">DETAIL</span>
+          <button type="button" class="hd-x" aria-label="Close">×</button>
+        </div>`;
+    }
+
+    function openCard(html) {
+      card.innerHTML = cardTop() + html;
+      card.querySelector(".hd-x").addEventListener("click", () => { stopAutoplay(); resetDemo(); });
+      card.classList.add("is-open");
+    }
+
+    function closeCard() {
+      card.classList.remove("is-open");
+    }
+
+    /** Step 3: the claim, shown editable before anything is searched. */
+    function showConfirm(key, text) {
+      pending = { key, original: text };
+      setStep(3);
+      openCard(`
+        <p class="hd-label">Found 1 claim — edit if needed, then check:</p>
+        <textarea class="hd-textarea" rows="3" aria-label="Claim to check"></textarea>
+        <button type="button" class="hd-check">Check this →</button>`);
+      card.querySelector(".hd-textarea").value = text;
+      card.querySelector(".hd-check").addEventListener("click", () => {
+        stopAutoplay();
+        submit(card.querySelector(".hd-textarea").value);
+      });
+    }
+
+    function showLoading() {
+      openCard('<div class="hd-loading"><i></i> Checking…</div>');
+    }
+
+    /** Step 4: a prerecorded result, sources open. */
+    function showResult(key) {
+      const r = RESULTS[key];
+      setStep(4);
+      let html = `
+        <div class="hd-verdict ${r.tone}">
+          <span class="hd-icon">${r.icon}</span>
+          <div><div class="hd-word">${r.word}</div><div class="hd-sum">${r.summary}</div></div>
+        </div>`;
+      if (r.sources) {
+        html += `<button type="button" class="hd-toggle" aria-expanded="true">${r.toggle} <span aria-hidden="true">▴</span></button>
+          <ul class="hd-sources">${r.sources.map((s) => `
+            <li class="hd-src">
+              <span class="hd-src-mark">${s.mark}</span>
+              <span class="hd-dom">${s.domain}</span>
+              <span class="hd-trust t-${s.trust}">${s.trust}</span>
+              <span class="hd-title">${s.title}</span>
+              <span class="hd-snip">${s.snippet}</span>
+            </li>`).join("")}
+          </ul>`;
+      }
+      if (r.after) html += `<p class="hd-label" style="margin:12px 2px 0">${r.after}</p>`;
+      openCard(html);
+      const toggle = card.querySelector(".hd-toggle");
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          const list = card.querySelector(".hd-sources");
+          list.hidden = !list.hidden;
+          toggle.setAttribute("aria-expanded", String(!list.hidden));
+          toggle.lastElementChild.textContent = list.hidden ? "▾" : "▴";
+        });
+      }
+    }
+
+    /** Anything without a prerecorded result: say so, and offer the real thing. */
+    function showOwnText() {
+      setStep(4);
+      openCard(`
+        <div class="hd-verdict is-demo">
+          <span class="hd-icon">${ICON.slot}</span>
+          <div><div class="hd-word">according to [ … ]</div>
+          <div class="hd-sum">This example page only has results for the two <b>underlined sentences</b>. To check your own text, on any site, install the extension. The first 25 checks each month are free.</div></div>
+        </div>
+        <div class="hd-demo-cta">
+          <a class="btn btn-primary" href="${STORE_URL}" target="_blank" rel="noopener">Add to Chrome, free</a>
+          <button type="button" class="btn btn-secondary" id="hd-try-sample">Try the lemon claim</button>
+        </div>`);
+      card.querySelector("#hd-try-sample").addEventListener("click", () => jumpTo(3));
+    }
+
+    /** The visitor pressed Check: prerecorded result if the text is untouched. */
+    function submit(text) {
+      const key = pending && pending.key && text.trim() === pending.original.trim() ? pending.key : null;
+      const token = ++run;
+      showLoading();
+      setTimeout(() => {
+        if (token !== run) return;
+        if (key) showResult(key); else showOwnText();
+      }, 900);
+    }
+
+    function resetDemo() {
+      Object.values(claims).forEach((c) => c.classList.remove("is-swept"));
+      closeMenu();
+      closeCard();
+      hideHint();
+      cursor.classList.remove("is-on");
+      pending = null;
+      setStep(0);
+    }
+
+    function stopAutoplay() {
+      if (!autoplay) return;
+      autoplay = false;
+      run++;
+      cursor.classList.remove("is-on");
+    }
+
+    /** Jumps straight to one step of the lemon example (step-strip clicks). */
+    function jumpTo(n) {
+      stopAutoplay();
+      run++;
+      resetDemo();
+      window.getSelection()?.removeAllRanges();
+      const el = claims.lemon;
+      el.classList.add("is-swept");
+      setStep(n);
+      if (n === 2) {
+        const { last } = claimEnds(el);
+        openMenu(last.right + 4, last.bottom + 6);
+      } else if (n === 3) {
+        showConfirm("lemon", el.textContent.trim());
+      } else if (n === 4) {
+        showResult("lemon");
+      }
+    }
+
+    /** One pass of the scripted example; chains into the other sentence. */
+    async function play(key) {
+      const token = ++run;
+      const wait = (ms) => new Promise((resolve, reject) =>
+        setTimeout(() => (token === run && autoplay ? resolve() : reject(new Error("cancelled"))), ms));
+      try {
+        resetDemo();
+        await wait(600);
+        const el = claims[key];
+        const { first, last } = claimEnds(el);
+
+        cursor.classList.add("no-anim");
+        moveCursor(first.left - 60, first.top + 90);
+        void cursor.offsetWidth;
+        cursor.classList.remove("no-anim");
+        cursor.classList.add("is-on");
+        await wait(150);
+        moveCursor(first.left - 2, first.top + 4);
+        setStep(1);
+        await wait(900);
+
+        el.classList.add("is-swept");
+        moveCursor(last.right - 2, last.top + 4, true);
+        await wait(1300);
+
+        setStep(2);
+        clickCursor();
+        await wait(250);
+        openMenu(last.right + 4, last.bottom + 6);
+        await wait(650);
+        const item = rel(menuFc.getBoundingClientRect());
+        moveCursor(item.left + 46, item.top + item.height / 2 - 4);
+        await wait(800);
+        menuFc.classList.add("is-hot");
+        clickCursor();
+        await wait(300);
+        closeMenu();
+
+        showConfirm(key, el.textContent.trim());
+        await wait(1500);
+        const btn = card.querySelector(".hd-check");
+        const b = rel(btn.getBoundingClientRect());
+        moveCursor(b.left + b.width / 2, b.top + b.height / 2 - 4);
+        await wait(900);
+        clickCursor();
+        btn.classList.add("is-pressed");
+        await wait(180);
+
+        showLoading();
+        await wait(1000);
+        showResult(key);
+        cursor.classList.remove("is-on");
+        await wait(key === "lemon" ? 7500 : 4500);
+        play(key === "lemon" ? "opinion" : "lemon");
+      } catch (e) {
+        /* cancelled: the visitor took over */
+      }
+    }
+
+    // ---------- The visitor takes over ----------
+
+    page.addEventListener("pointerdown", () => {
+      if (autoplay) { stopAutoplay(); resetDemo(); }
+      closeMenu();
+      hideHint();
+    });
+
+    /** The sample sentence a selection touches, if any. */
+    function selectedClaim(sel) {
+      if (!sel.rangeCount) return null;
+      const range = sel.getRangeAt(0);
+      return Object.keys(claims).find((k) => range.intersectsNode(claims[k])) || null;
+    }
+
+    page.addEventListener("pointerup", (e) => {
+      setTimeout(() => {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed || !page.contains(sel.anchorNode)) return;
+        const r = rel(sel.getRangeAt(0).getBoundingClientRect());
+        setStep(1);
+        if (e.pointerType === "touch") {
+          // No right-click on a phone: open the menu straight away.
+          setStep(2);
+          openMenu(r.left, r.bottom + 8);
+        } else {
+          showHint(r.right - 60, r.bottom + 8);
+        }
+      }, 0);
+    });
+
+    page.addEventListener("contextmenu", (e) => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !page.contains(sel.anchorNode)) return;
+      e.preventDefault();
+      hideHint();
+      setStep(2);
+      const b = browser.getBoundingClientRect();
+      openMenu(e.clientX - b.left + 2, e.clientY - b.top + 2);
+    });
+
+    menuFc.addEventListener("click", () => {
+      const sel = window.getSelection();
+      const key = selectedClaim(sel);
+      const text = key ? claims[key].textContent.trim() : (sel ? sel.toString().trim().slice(0, 300) : "");
+      closeMenu();
+      stopAutoplay();
+      if (key) claims[key].classList.add("is-swept");
+      showConfirm(key, text || claims.lemon.textContent.trim());
+    });
+
+    document.addEventListener("pointerdown", (e) => {
+      if (!menu.contains(e.target) && !page.contains(e.target)) closeMenu();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { closeMenu(); hideHint(); }
+    });
+
+    steps.forEach((li) => {
+      li.querySelector("button").addEventListener("click", (e) => jumpTo(Number(e.currentTarget.dataset.step)));
+    });
+
+    document.getElementById("hd-replay").addEventListener("click", () => {
+      window.getSelection()?.removeAllRanges();
+      autoplay = true;
+      play("lemon");
+    });
+
+    // Start once the web fonts are in, so the measured line boxes are final.
+    const start = () => (autoplay ? play("lemon") : jumpTo(4));
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+  })();
+</script>
+
+<script>
+  // ---------- Journey bar ----------
+  // Shown once the hero is out of view; marks the section being read and
+  // fills a green line along its bottom edge with how far down the page
+  // the reader is, pricing being where it leads.
+  (() => {
+    const bar = document.getElementById("journey");
+    const hero = document.querySelector("main.hero");
+    if (!bar || !hero || !("IntersectionObserver" in window)) return;
+    const progress = document.getElementById("journey-progress");
+    const links = Array.from(bar.querySelectorAll("ol a"));
+    new IntersectionObserver(([e]) => bar.classList.toggle("is-on", !e.isIntersecting), { threshold: 0.05 }).observe(hero);
+    const byId = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
+    const seen = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        links.forEach((a) => a.classList.remove("is-active"));
+        byId.get(e.target.id)?.classList.add("is-active");
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    byId.forEach((_, id) => { const el = document.getElementById(id); if (el) seen.observe(el); });
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5dee5a6dd27b459882c995004326b270"}'></script>
 
 </body>
