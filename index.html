@@ -1600,6 +1600,76 @@
     section.band { padding: 48px 0; }
     .start-steps { grid-template-columns: 1fr; }
   }
+
+  /* ---- Three pillars in the hero copy. Each one drives the demo beside
+     it: clicking shows the part of the product it describes, outlined in
+     the brand green, and they light up as the autoplay reaches that part. ---- */
+  .pillars { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 8px; max-width: 34em; }
+  .pillars button {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 14px 10px 10px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.45;
+    text-align: left;
+    color: var(--body-text);
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--hairline);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+  .pillars button:hover, .pillars button.is-lit, .pillars button.is-picked {
+    border-color: var(--sourced);
+    border-left-color: var(--sourced);
+    box-shadow: 0 0 0 3px var(--sourced-tint);
+  }
+  .pillars button:hover { transform: translateX(3px); }
+  .pl-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--sourced);
+  }
+  .pl-icon svg { width: 18px; height: 18px; stroke: #F4F1EA; }
+  .pl-text { flex: 1; }
+  .pl-text b { display: block; font-size: 15.5px; font-weight: 700; color: var(--ink); }
+  .pl-show {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--sourced);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .pillars button:hover .pl-show, .pillars button:focus-visible .pl-show { opacity: 1; }
+  .hd-card[data-spot="confirm"] .hd-textarea { border-color: var(--sourced); box-shadow: 0 0 0 3px var(--sourced-tint); }
+  .hd-card[data-spot="sources"] .hd-sources { outline: 2px solid var(--sourced); outline-offset: 4px; border-radius: 6px; box-shadow: 0 0 0 7px var(--sourced-tint); }
+  .hd-card[data-spot="ai"] .hd-verdict,
+  .hd-card[data-spot="ai"] .hd-snip { box-shadow: 0 0 0 3px var(--sourced-tint); }
+  .hd-card[data-spot="ai"] .hd-snip { background: var(--sourced-tint); border-radius: 4px; }
+  .hd-card[data-spot="ai"] .hd-src-mark { color: var(--sourced); font-weight: 700; }
+  @media (max-width: 1100px) { .pillars { margin-left: auto; margin-right: auto; } }
+  @media (max-width: 520px) { .pl-show { display: none; } }
+
+  /* First-screen fit: headline, pillars and the install button all above
+     the fold on a 1440x900 laptop. */
+  @media (min-width: 1101px) {
+    .hero-grid { grid-template-columns: minmax(400px, 6fr) minmax(0, 8fr); gap: 48px; padding-top: 32px; padding-bottom: 40px; }
+    .hero-split h1 { font-size: clamp(36px, 3.3vw, 52px); margin-bottom: 16px; }
+    .hero-split .lede { font-size: 17px; margin-bottom: 20px; }
+    .pillars { gap: 6px; margin-bottom: 22px; }
+    .pillars button { padding: 8px 12px 8px 8px; font-size: 13.5px; line-height: 1.4; }
+    .pl-text b { font-size: 15px; }
+    .pl-icon { width: 30px; height: 30px; }
+    .hero-split .eyebrow { margin-bottom: 12px; }
+    .hero-split .badge { margin-top: 12px; }
+    .hero-split .cta-compat { margin-top: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -1633,17 +1703,32 @@
         sources, weighs them by a trust list you <b>curate yourself</b>, and shows
         you the evidence behind it.
       </p>
+      <ul class="pillars" aria-label="What makes it different">
+        <li><button type="button" data-show="confirm">
+          <span class="pl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span>
+          <span class="pl-text"><b>No fire-and-forget</b>You see and edit the claim before anything is searched.</span>
+          <span class="pl-show" aria-hidden="true">show me →</span>
+        </button></li>
+        <li><button type="button" data-show="sources">
+          <span class="pl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg></span>
+          <span class="pl-text"><b>Investigate the sources</b>Every one listed, with the exact sentence it was judged on.</span>
+          <span class="pl-show" aria-hidden="true">show me →</span>
+        </button></li>
+        <li><button type="button" data-show="ai">
+          <span class="pl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3.5-6.5 9-6.5S21 12 21 12s-3.5 6.5-9 6.5S3 12 3 12z"/><circle cx="12" cy="12" r="2.6"/></svg></span>
+          <span class="pl-text"><b>AI summaries, no black box</b>The AI only reads what the search found. It never answers from memory.</span>
+          <span class="pl-show" aria-hidden="true">show me →</span>
+        </button></li>
+      </ul>
       <div class="cta-row">
         <a class="btn btn-primary btn-install" href="https://chromewebstore.google.com/detail/according-to/jlggllcjehpodnejbimkleijnjobffgi?utm_source=accordingto.app&amp;utm_medium=site&amp;utm_campaign=hero" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
           Try for free
         </a>
-        <a class="btn btn-secondary" href="#demo">Watch the demo</a>
+        <a class="btn btn-secondary" id="hero-watch" href="#demo">Watch the demo</a>
       </div>
       <p class="cta-compat">
-        Installs from the Chrome Web Store — and works the same in
-        <b>Edge</b>, <b>Brave</b>, <b>Opera</b>, <b>Vivaldi</b> and
-        <b>Arc</b>, or any other Chromium browser.
+        Also works in <b>Edge</b>, <b>Brave</b>, <b>Opera</b>, <b>Vivaldi</b> and <b>Arc</b>.
       </p>
       <div class="badge">Free for 25 fact-checks a month · no card needed</div>
     </div>
@@ -2411,6 +2496,20 @@
       frame.allowFullscreen = true;
       facade.replaceWith(frame);
     });
+    // The hero's "Watch the demo" does what pressing play does: scroll to
+    // the video and start it, inside the same click so the browser still
+    // counts it as the visitor's own gesture and lets it play.
+    var watch = document.getElementById("hero-watch");
+    if (watch) {
+      watch.addEventListener("click", function (e) {
+        e.preventDefault();
+        var section = document.getElementById("demo");
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        section.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        var still = document.getElementById("demo-play");
+        if (still) still.click();
+      });
+    }
   })();
 </script>
 
@@ -2442,6 +2541,7 @@
     const hint = document.getElementById("hd-hint");
     const cursor = browser.querySelector(".hd-cursor");
     const steps = Array.from(document.querySelectorAll("#hd-steps li"));
+    const pillars = Array.from(document.querySelectorAll(".pillars button"));
     const claims = {
       lemon: document.getElementById("hd-claim-lemon"),
       opinion: document.getElementById("hd-claim-opinion")
@@ -2509,6 +2609,17 @@
         li.classList.toggle("is-active", i + 1 === n);
         li.classList.toggle("is-done", i + 1 < n);
       });
+      // The three pillars in the hero copy light up as the demo reaches
+      // the part of the product each one describes.
+      pillars.forEach((b) => {
+        const show = b.dataset.show;
+        b.classList.toggle("is-lit", (show === "confirm" && n === 3) || (show !== "confirm" && n === 4));
+      });
+    }
+
+    /** Outlines the part of the card a pillar is about, in the brand green. */
+    function spotlight(what) {
+      if (what) card.dataset.spot = what; else delete card.dataset.spot;
     }
 
     function moveCursor(x, y, drag = false) {
@@ -2649,6 +2760,7 @@
       hideHint();
       cursor.classList.remove("is-on");
       pending = null;
+      spotlight(null);
       setStep(0);
     }
 
@@ -2793,6 +2905,15 @@
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") { closeMenu(); hideHint(); }
+    });
+
+    pillars.forEach((b) => {
+      b.addEventListener("click", () => {
+        const what = b.dataset.show;
+        jumpTo(what === "confirm" ? 3 : 4);
+        spotlight(what);
+        pillars.forEach((x) => x.classList.toggle("is-picked", x === b));
+      });
     });
 
     steps.forEach((li) => {
